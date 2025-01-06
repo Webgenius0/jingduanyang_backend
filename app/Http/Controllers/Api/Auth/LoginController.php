@@ -85,22 +85,15 @@ class LoginController extends Controller {
         $userData = User::where('email', $request->email)->first();
 
         if ($userData && Hash::check($request->password, $userData->password)) {
-            if($userData->email_verified_at == null) {
 
-                $this->verifyOTP($userData);
-
-                $userData->setAttribute('token', null);
-
-            } else {
-
-                if (!$token = JWTAuth::attempt($credentials)) {
-                    return $this->error([], 'Invalid credentials', 401);
-                }
-
-                $userData = auth()->user();
-
-                $userData->setAttribute('token', $token);
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return $this->error([], 'Invalid credentials', 401);
             }
+
+            $userData = auth()->user();
+
+            $userData->setAttribute('token', $token);
+
         } else {
             return $this->error([], 'Invalid credentials', 401);
         }

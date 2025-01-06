@@ -53,7 +53,7 @@ class RegisterController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'name'           => 'required|string|max:255',
+            'first_name'           => 'required|string|max:255',
             'email'          => 'required|email|unique:users,email',
             'role'           => 'required',
             'password'       => [
@@ -74,7 +74,7 @@ class RegisterController extends Controller
         try {
             // Find the user by ID
             $user                 = new User();
-            $user->name           = $request->input('name');
+            $user->first_name           = $request->input('first_name');
             $user->email          = $request->input('email');
             $user->password       = Hash::make($request->input('password')); // Hash the password
             $user->role           = $request->input('role');

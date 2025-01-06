@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('sub_description')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
-            $table->string('soft_delete')->nullable();
+            $table->softDeletes();
         });
     }
 
