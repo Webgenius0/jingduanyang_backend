@@ -177,7 +177,7 @@
                 </div>
 
                 <div data-kt-menu-trigger="click"
-                    class="menu-item {{ request()->routeIs(['faq.*', 'dynamic_page.*']) ? 'active show' : '' }} menu-accordion">
+                    class="menu-item {{ request()->routeIs(['cms.home.hero_section','cms.about_us.*']) ? 'active show' : '' }} menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">
                             <i class="fa-regular fa-file fs-2"></i>
@@ -187,12 +187,24 @@
                     </span>
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
-                            <a href="{{ route('dynamic_page.index') }}"
-                                class="menu-link {{ request()->routeIs(['dynamic_page.index', 'dynamic_page.create', 'dynamic_page.update']) ? 'active show' : '' }}">
+                            <a href="{{ route('cms.home.hero_section') }}"
+                                class="menu-link {{ request()->routeIs(['cms.home.hero_section']) ? 'active show' : '' }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
                                 <span class="menu-title">Hero Section</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a href="{{ route('cms.about_us.index') }}"
+                                class="menu-link {{ request()->routeIs(['cms.about_us.index']) ? 'active show' : '' }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">About Us</span>
                             </a>
                         </div>
                     </div>
