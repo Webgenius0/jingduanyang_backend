@@ -126,7 +126,7 @@
 
 <body class="w-screen h-screen bg-blue-500 flex justify-center items-center text-center">
     <div class="Box">
-        <h1 class="text-6xl font-bold text-white">Laravel API Stater Kit.</h1>
+        <h1 class="text-6xl font-bold text-white">Welcome To The Admin Dashboard.</h1>
         <p class="text-md mt-4 text-white">
             <a href="https://github.com/rhishi-kesh" class="hover:underline link" target="_blank">
                 <svg class="inline-block mr-1" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -138,7 +138,7 @@
                         d="M13.9536 10C15.4596 11.5118 15.3239 14.0991 13.6506 15.7789L11.2268 18.2121L8.80299 20.6454C7.12969 22.3252 4.55237 22.4613 3.0464 20.9495C1.54043 19.4377 1.67609 16.8504 3.34939 15.1706L5.77323 12.7373"
                         stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
                 </svg>
-                <span class="author">Rhishi Kesh Bhowmik💕</span>
+                <span class="author">Jingduanyang Bhowmik💕</span>
             </a>
         </p>
     </div>

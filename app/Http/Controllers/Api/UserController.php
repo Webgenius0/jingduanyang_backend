@@ -40,7 +40,17 @@ class UserController extends Controller {
 
         $validator = Validator::make($request->all(), [
             'avatar'  => 'nullable|image|mimes:jpeg,png,jpg,svg|max:5120',
-            'name'    => 'required|string|max:255',
+            'first_name'    => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'phone' => 'nullable|string',
+            'gender' => 'nullable|string',
+            'birthdate' => 'nullable|string',
+            'state' => 'nullable|string',
+            'city' => 'nullable|string',
+            'zip_code' => 'nullable|string',
+            'therapy_type' => 'nullable|string',
+            'languages' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -71,7 +81,18 @@ class UserController extends Controller {
                 $imageName = $user->avatar;
             }
 
-            $user->name    = $request->name;
+            $user->first_name    = $request->first_name;
+            $user->last_name = $request->last_name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->gender = $request->gender;
+            $user->birthdate = $request->birthdate;
+            $user->state = $request->state;
+            $user->city = $request->city;
+            $user->zip_code = $request->zip_code;
+            $user->therapy_type = $request->therapy_type;
+            $user->languages = $request->languages;
+            $user->agree_to_terms = $request->agree_to_terms;
             $user->avatar  = $imageName;
 
             $user->save();

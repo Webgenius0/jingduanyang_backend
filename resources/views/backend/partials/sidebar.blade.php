@@ -93,6 +93,7 @@
                         <span class="menu-title">Courses</span>
                     </a>
                 </div>
+
                 <div data-kt-menu-trigger="click"
                     class="menu-item {{ request()->routeIs(['admin.teams.*']) ? 'active show' : '' }} menu-accordion">
                     <span class="menu-link">
@@ -116,6 +117,20 @@
                     </div>
                 </div>
 
+                <div class="menu-item">
+                    <a class="menu-link {{ request()->routeIs('admin.faq.*') ? 'active' : '' }}"
+                        href="{{ route('admin.faq.index') }}">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-element-11 fs-2">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                                <span class="path3"></span>
+                                <span class="path4"></span>
+                            </i>
+                        </span>
+                        <span class="menu-title">Faq</span>
+                    </a>
+                </div>
 
                 <div data-kt-menu-trigger="click"
                     class="menu-item {{ request()->routeIs(['admin.blog_categories.*', 'admin.blogs.*']) ? 'active show' : '' }} menu-accordion">

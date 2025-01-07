@@ -4,11 +4,13 @@ use App\Http\Controllers\Web\Backend\BlogCategoryController;
 use App\Http\Controllers\Web\Backend\BlogController;
 use App\Http\Controllers\Web\Backend\CourseController;
 use App\Http\Controllers\Web\Backend\DashboardController;
+use App\Http\Controllers\Web\Backend\FaqController;
 use App\Http\Controllers\Web\Backend\ProductCategoryController;
 use App\Http\Controllers\Web\Backend\ProductController;
 use App\Http\Controllers\Web\Backend\ServiceController;
 use App\Http\Controllers\Web\Backend\TeamController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -76,6 +78,7 @@ Route::controller(BlogController::class)->group(function () {
     Route::post('/blogs/status/{id}','status')->name('admin.blogs.status');
 });
 
+//Services routes
 Route::controller(ServiceController::class)->group(function () {
     Route::get('/services', 'index')->name('admin.services.index');
     Route::get('/services/create', 'create')->name('admin.services.create');
@@ -83,6 +86,18 @@ Route::controller(ServiceController::class)->group(function () {
     Route::get('/services/edit/{id}', 'edit')->name('admin.services.edit');
     Route::post('/services/update/{id}', 'update')->name('admin.services.update');
     Route::delete('/services/delete/{id}', 'destroy')->name('admin.services.destroy');
+    Route::post('/services/status/{id}', 'status')->name('admin.services.status');
+});
+
+//Faq route for admin
+Route::controller(FaqController::class)->group(function () {
+    Route::get('/faq','index')->name('admin.faq.index');
+    Route::get('/faq/create','create')->name('admin.faq.create');
+    Route::post('/faq/store','store')->name('admin.faq.store');
+    Route::get('/faq/edit/{id}','edit')->name('admin.faq.edit');
+    Route::post('/faq/update/{id}','update')->name('admin.faq.update');
+    Route::delete('/faq/delete/{id}','destroy')->name('admin.faq.destroy');
+    Route::post('/faq/status/{id}','status')->name('admin.faq.status');
 });
 
 

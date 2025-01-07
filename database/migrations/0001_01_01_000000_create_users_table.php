@@ -13,11 +13,20 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('birthdate')->nullable();
+            $table->string('gender')->nullable(); // Field to store gender
+            $table->string('phone')->nullable();
+            $table->string('state')->nullable();
+            $table->string('city')->nullable();
+            $table->string('zip_code')->nullable();
+            $table->string('therapy_type')->nullable();
+            $table->string('languages')->nullable();
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'client', 'psychologist','doctor'])->default('client');
+            $table->enum('role', ['admin', 'client','doctor'])->default('client');
             $table->string('avatar')->nullable();
             $table->boolean('agree_to_terms')->default(false); // Field to store agreement to terms
             $table->rememberToken();
