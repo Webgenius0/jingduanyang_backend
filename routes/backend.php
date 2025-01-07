@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Web\Backend\BlogCategoryController;
 use App\Http\Controllers\Web\Backend\BlogController;
+use App\Http\Controllers\Web\Backend\Cms\AboutUsController;
+use App\Http\Controllers\Web\Backend\Cms\HomeController;
 use App\Http\Controllers\Web\Backend\CourseController;
 use App\Http\Controllers\Web\Backend\DashboardController;
 use App\Http\Controllers\Web\Backend\FaqController;
@@ -10,6 +12,8 @@ use App\Http\Controllers\Web\Backend\ProductController;
 use App\Http\Controllers\Web\Backend\ServiceController;
 use App\Http\Controllers\Web\Backend\TeamController;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 
@@ -100,4 +104,15 @@ Route::controller(FaqController::class)->group(function () {
     Route::post('/faq/status/{id}','status')->name('admin.faq.status');
 });
 
+//Cms  Home Hero section Route
+Route::controller(HomeController::class)->group(function () {
+    Route::get('/cms/home/hero-section','HeroSection')->name('cms.home.hero_section');
+    Route::post('/cms/home/hero-section/store', 'HeroSectionStore')->name('cms.home.hero_section.store');
+});
+
+//Cms About Us Page route 
+Route::controller(AboutUsController::class)->group(function () {
+    Route::get('/cms/about-us','index')->name('cms.about_us.index');
+    Route::post('/cms/about-us/store', 'store')->name('cms.about_us.store');
+});
 
