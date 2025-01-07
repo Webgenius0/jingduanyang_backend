@@ -1,11 +1,24 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\LoginController;
-use App\Http\Controllers\Api\CategoryController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\SocialAuthController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\SocialAuthController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\Web\BlogController;
+use App\Http\Controllers\Api\Web\DynamicPageController;
+use App\Http\Controllers\Api\Web\FaqController;
+use App\Http\Controllers\Api\Web\ServiceController;
+use App\Http\Controllers\Api\Web\SystemSettingController;
+use App\Http\Controllers\Api\Web\TeamController;
+use Database\Seeders\FAQSeeder;
+use Illuminate\Support\Facades\Route;
+
+
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -63,3 +76,41 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     });
 
 });
+
+//System Setting route
+Route::controller(SystemSettingController::class)->group(function(){
+    Route::get('/system-setting','SystemSetting');
+    Route::get('/social-media','socialMedia');
+});
+
+//Blog route
+Route::controller(BlogController::class)->group(function(){
+    Route::get('/blogs','blogs');
+    Route::get('/blog-detail/{id}','blogDetail');
+    Route::get('/related-blogs/{id}','relatedBlog');
+});
+
+//Dynamic page routes
+Route::controller(DynamicPageController::class)->group(function () {
+    Route::get('/dynamic-page', 'getDynamicPage');
+    Route::get('/singel-page/{id}','singelPage');
+});
+
+//Team routes
+Route::controller(TeamController::class)->group(function(){
+    Route::get('/team','getTeam');
+    Route::get('/team-detail/{id}','teamDetail');
+});
+
+//Service routes
+Route::controller(ServiceController::class)->group(function () {
+    Route::get('/services','getServices');
+    Route::get('/service-detail/{id}','serviceDetail');
+});
+
+//Faq routes
+Route::controller(FaqController::class)->group(function () {
+    Route::get('/faqs','getFaqs');
+});
+
+
