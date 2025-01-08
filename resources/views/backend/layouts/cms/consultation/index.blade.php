@@ -1,6 +1,6 @@
 @extends('backend.app')
 
-@section('title', 'Cms || About Us Page')
+@section('title', 'Cms || Consultation')
 
 @section('content')
     <!--begin::Toolbar-->
@@ -22,7 +22,7 @@
                     </li>
 
                     <li class="breadcrumb-item text-muted"> Cma </li>
-                    <li class="breadcrumb-item text-muted"> About Us Page </li>
+                    <li class="breadcrumb-item text-muted"> Consultation </li>
 
                 </ul>
 
@@ -38,13 +38,13 @@
             <div class="col-lg-12">
                 <div class="card p-5">
                     <div class="card-style mb-30">
-                        <form method="POST" action="{{ route('cms.about_us.store') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('cms.home.consultation.store') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="input-style-1 mt-4">
                                 <label for="title">Title:</label>
                                 <input type="text" placeholder="Enter Title" id="title"
                                     class="form-control @error('title') is-invalid @enderror" name="title"
-                                    value="{{ $about_us->title ?? old('title') }}" />
+                                    value="{{ $consultation->title ?? old('title') }}" />
                                 @error('title')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -53,9 +53,9 @@
                             </div>
                             <div class="input-style-1 mt-4">
                                 <label for="description"> Description :</label>
-                                <textarea placeholder="Type here..." id="content" name="description"
+                                <textarea placeholder="Type here..." id="description" name="description"
                                     class="form-control @error('description') is-invalid @enderror">
-                                        {{ $about_us->description ?? old('description') }}
+                                        {{ $consultation->description ?? old('description') }}
                                     </textarea>
                                 @error(' description ')
                                     <span class="invalid-feedback" role="alert">
@@ -67,7 +67,7 @@
                                 <label for="image_url">Image:</label>
                                 <input type="file" placeholder="Enter Image" id="image_url"
                                     class="dropify form-control @error('image') is-invalid @enderror" name="image_url"
-                                    data-default-file="{{ asset($about_us->image_url ?? 'backend/images/placeholder/image_placeholder.png') }}">
+                                    data-default-file="{{ asset($consultation->image_url ?? 'backend/images/placeholder/image_placeholder.png') }}">
                                 @error('image_url')
                                     <span class="text-danger" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -86,15 +86,6 @@
         </div>
     </div>
 @endsection
-
-
-
 @push('script')
-    <script>
-        ClassicEditor
-            .create(document.querySelector('#content'))
-            .catch(error => {
-                console.error(error);
-            });
-    </script>
+   
 @endpush

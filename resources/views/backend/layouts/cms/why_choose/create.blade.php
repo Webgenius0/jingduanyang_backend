@@ -1,6 +1,6 @@
 @extends('backend.app')
 
-@section('title', 'Cms || About Us Page')
+@section('title', 'CMS || Why Choose Us Create')
 
 @section('content')
     <!--begin::Toolbar-->
@@ -21,11 +21,10 @@
                             Home </a>
                     </li>
 
-                    <li class="breadcrumb-item text-muted"> Cma </li>
-                    <li class="breadcrumb-item text-muted"> About Us Page </li>
+                    <li class="breadcrumb-item text-muted"> Cms </li>
+                    <li class="breadcrumb-item text-muted"> Why Choose Us Create </li>
 
                 </ul>
-
                 <!--end::Breadcrumb-->
             </div>
             <!--end::Info-->
@@ -36,40 +35,28 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <div class="card p-5">
-                    <div class="card-style mb-30">
-                        <form method="POST" action="{{ route('cms.about_us.store') }}" enctype="multipart/form-data">
+                <div class="card-style mb-4">
+                    <div class="card card-body">
+                        <form method="POST" action="{{ route('cms.why_choose_us.store') }}">
                             @csrf
                             <div class="input-style-1 mt-4">
                                 <label for="title">Title:</label>
-                                <input type="text" placeholder="Enter Title" id="title"
-                                    class="form-control @error('title') is-invalid @enderror" name="title"
-                                    value="{{ $about_us->title ?? old('title') }}" />
+                                <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" value="{{ old('title') }}" placeholder="Enter Title">
                                 @error('title')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
+
                             <div class="input-style-1 mt-4">
-                                <label for="description"> Description :</label>
-                                <textarea placeholder="Type here..." id="content" name="description"
-                                    class="form-control @error('description') is-invalid @enderror">
-                                        {{ $about_us->description ?? old('description') }}
-                                    </textarea>
-                                @error(' description ')
+                                <label for="description">Description:</label>
+                                <textarea id="description" name="description"
+                                    class="form-control @error('description') is-invalid @enderror" rows="4">
+                                    {{ old('description') }}
+                                </textarea>
+                                @error('description')
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="input-style-1 mt-4">
-                                <label for="image_url">Image:</label>
-                                <input type="file" placeholder="Enter Image" id="image_url"
-                                    class="dropify form-control @error('image') is-invalid @enderror" name="image_url"
-                                    data-default-file="{{ asset($about_us->image_url ?? 'backend/images/placeholder/image_placeholder.png') }}">
-                                @error('image_url')
-                                    <span class="text-danger" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
@@ -77,7 +64,7 @@
 
                             <div class="col-12 mt-4">
                                 <button type="submit" class="btn btn-primary">Submit</button>
-                                <a href="{{ route('admin.dashboard') }}" class="btn btn-danger me-2">Cancel</a>
+                                <a href="{{ route('cms.why_choose_us.index') }}" class="btn btn-danger me-2">Cancel</a>
                             </div>
                         </form>
                     </div>
@@ -87,14 +74,6 @@
     </div>
 @endsection
 
-
-
 @push('script')
-    <script>
-        ClassicEditor
-            .create(document.querySelector('#content'))
-            .catch(error => {
-                console.error(error);
-            });
-    </script>
+
 @endpush
