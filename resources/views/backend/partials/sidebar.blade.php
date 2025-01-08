@@ -177,7 +177,7 @@
                 </div>
 
                 <div data-kt-menu-trigger="click"
-                    class="menu-item {{ request()->routeIs(['cms.home.hero_section','cms.about_us.*']) ? 'active show' : '' }} menu-accordion">
+                    class="menu-item {{ request()->routeIs(['cms.home.hero_section','cms.about_us.*','cms.why_choose_us.*','cms.home.help_section.*','cms.home.education.index','cms.home.consultation.index']) ? 'active show' : '' }} menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">
                             <i class="fa-regular fa-file fs-2"></i>
@@ -185,6 +185,7 @@
                         <span class="menu-title">CMS</span>
                         <span class="menu-arrow"></span>
                     </span>
+
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
                             <a href="{{ route('cms.home.hero_section') }}"
@@ -199,12 +200,59 @@
 
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
+                            <a href="{{ route('cms.home.education.index') }}"
+                                class="menu-link {{ request()->routeIs(['cms.home.education.index']) ? 'active show' : '' }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Education Section</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a href="{{ route('cms.home.consultation.index') }}"
+                                class="menu-link {{ request()->routeIs(['cms.home.consultation.index']) ? 'active show' : '' }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Consultation Section</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a href="{{ route('cms.home.help_section.index') }}"
+                                class="menu-link {{ request()->routeIs(['cms.home.help_section.index']) ? 'active show' : '' }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Help Section</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
                             <a href="{{ route('cms.about_us.index') }}"
                                 class="menu-link {{ request()->routeIs(['cms.about_us.index']) ? 'active show' : '' }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
                                 <span class="menu-title">About Us</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a href="{{ route('cms.why_choose_us.index') }}"
+                                class="menu-link {{ request()->routeIs(['cms.why_choose_us.index']) ? 'active show' : '' }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Why Choose Us</span>
                             </a>
                         </div>
                     </div>
@@ -233,13 +281,6 @@
                                     <span class="bullet bullet-dot"></span>
                                 </span>
                                 <span class="menu-title">Dynamic Page</span>
-                            </a>
-                            <a href="{{ route('dynamic_page.index') }}"
-                                class="menu-link {{ request()->routeIs(['dynamic_page.index', 'dynamic_page.create', 'dynamic_page.update']) ? 'active show' : '' }}">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Faq</span>
                             </a>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 @extends('backend.app')
 
-@section('title', 'Cms || About Us Page')
+@section('title', 'Cms || Help Section')
 
 @section('content')
     <!--begin::Toolbar-->
@@ -22,7 +22,7 @@
                     </li>
 
                     <li class="breadcrumb-item text-muted"> Cma </li>
-                    <li class="breadcrumb-item text-muted"> About Us Page </li>
+                    <li class="breadcrumb-item text-muted"> Help Section Item Create </li>
 
                 </ul>
 
@@ -38,13 +38,14 @@
             <div class="col-lg-12">
                 <div class="card p-5">
                     <div class="card-style mb-30">
-                        <form method="POST" action="{{ route('cms.about_us.store') }}" enctype="multipart/form-data">
+                        <h4 class="mb-4">Help Section Item Create</h4>
+                        <form method="POST" action="{{ route('item.store') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="input-style-1 mt-4">
                                 <label for="title">Title:</label>
                                 <input type="text" placeholder="Enter Title" id="title"
                                     class="form-control @error('title') is-invalid @enderror" name="title"
-                                    value="{{ $about_us->title ?? old('title') }}" />
+                                    value="{{ old('title') }}" />
                                 @error('title')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -52,22 +53,10 @@
                                 @enderror
                             </div>
                             <div class="input-style-1 mt-4">
-                                <label for="description"> Description :</label>
-                                <textarea placeholder="Type here..." id="content" name="description"
-                                    class="form-control @error('description') is-invalid @enderror">
-                                        {{ $about_us->description ?? old('description') }}
-                                    </textarea>
-                                @error(' description ')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="input-style-1 mt-4">
-                                <label for="image_url">Image:</label>
+                                <label for="image_url">Icon:</label>
                                 <input type="file" placeholder="Enter Image" id="image_url"
                                     class="dropify form-control @error('image') is-invalid @enderror" name="image_url"
-                                    data-default-file="{{ asset($about_us->image_url ?? 'backend/images/placeholder/image_placeholder.png') }}">
+                                    data-default-file="{{ asset('backend/images/placeholder/image_placeholder.png') }}">
                                 @error('image_url')
                                     <span class="text-danger" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -77,24 +66,17 @@
 
                             <div class="col-12 mt-4">
                                 <button type="submit" class="btn btn-primary">Submit</button>
-                                <a href="{{ route('admin.dashboard') }}" class="btn btn-danger me-2">Cancel</a>
+                                <a href="{{ route('cms.home.help_section.index') }}" class="btn btn-danger me-2">Cancel</a>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
+            
         </div>
     </div>
 @endsection
 
-
-
 @push('script')
-    <script>
-        ClassicEditor
-            .create(document.querySelector('#content'))
-            .catch(error => {
-                console.error(error);
-            });
-    </script>
+    
 @endpush
