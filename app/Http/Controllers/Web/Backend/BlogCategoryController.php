@@ -59,7 +59,10 @@ class BlogCategoryController extends Controller
                 'message' => 'Category created successfully!',
             ]);
         } catch (\Exception $exception) {
-            return response()->json(['message' => $exception->getMessage()], 500);
+            return response()->json([
+                'success'=> false,
+                'message' => $exception->getMessage()
+            ], 500);
         }
     }
 
