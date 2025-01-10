@@ -1,22 +1,18 @@
 <?php
 
-use App\Http\Controllers\Api\Auth\LoginController;
-use App\Http\Controllers\Api\Auth\RegisterController;
-use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\SocialAuthController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\Web\BlogController;
-use App\Http\Controllers\Api\Web\DynamicPageController;
-use App\Http\Controllers\Api\Web\FaqController;
-use App\Http\Controllers\Api\Web\ServiceController;
-use App\Http\Controllers\Api\Web\SystemSettingController;
-use App\Http\Controllers\Api\Web\TeamController;
-use Database\Seeders\FAQSeeder;
 use Illuminate\Support\Facades\Route;
-
-
-
-
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\Web\FaqController;
+use App\Http\Controllers\Api\Web\BlogController;
+use App\Http\Controllers\Api\Web\HomePageController;
+use App\Http\Controllers\Api\Web\TeamController;
+use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\SocialAuthController;
+use App\Http\Controllers\Api\Web\AboutUsController;
+use App\Http\Controllers\Api\Web\ServiceController;
+use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\Web\DynamicPageController;
+use App\Http\Controllers\Api\Web\SystemSettingController;
 
 
 
@@ -106,11 +102,23 @@ Route::controller(TeamController::class)->group(function(){
 Route::controller(ServiceController::class)->group(function () {
     Route::get('/services','getServices');
     Route::get('/service-detail/{id}','serviceDetail');
+
+    Route::get('/why-choose-us','getWhyChooseUs');
 });
 
 //Faq routes
 Route::controller(FaqController::class)->group(function () {
     Route::get('/faqs','getFaqs');
+});
+
+//About Us routes
+Route::controller(AboutUsController::class)->group(function () {
+    Route::get('/about-us','getAboutUs');
+});
+
+//Help Section route
+Route::controller( HomePageController::class)->group(function () {
+    Route::get('/home-page','getHomePage');
 });
 
 
