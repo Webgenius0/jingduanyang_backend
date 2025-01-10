@@ -25,12 +25,12 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.das
 
 
 Route::controller(ProductCategoryController::class)->group(function () {
-    Route::get('/product-categories', 'index')->name('admin.product_categories.index');
-    Route::get('/product-categories/create', 'create')->name('admin.product_categories.create');
+    Route::get('/product-categories',  'index')->name('admin.product_categories.index');
     Route::post('/product-categories', 'store')->name('admin.product_categories.store');
     Route::get('/product-categories/edit/{id}', 'edit')->name('admin.product_categories.edit');
     Route::post('/product-categories/update/{id}', 'update')->name('admin.product_categories.update');
     Route::delete('/product-categories/delete/{id}', 'destroy')->name('admin.product_categories.destroy');
+    Route::post('/product-categories/status/{id}','status')->name('admin.product_categories.status');
 });
 
 Route::controller(ProductController::class)->group(function () {
@@ -40,6 +40,7 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/products/edit/{id}', 'edit')->name('admin.products.edit');
     Route::post('/products/update/{id}', 'update')->name('admin.products.update');
     Route::delete('/products/delete/{id}', 'destroy')->name('admin.products.destroy');
+    Route::post('/products/status/{id}','status')->name('admin.products.status');
 });
 
 Route::controller(CourseController::class)->group(function () {
