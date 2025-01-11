@@ -1,6 +1,6 @@
 @extends('backend.app')
 
-@section('title', 'Edit Blog')
+@section('title', 'Create Course')
 
 @section('content')
     <!--begin::Toolbar-->
@@ -21,8 +21,8 @@
                             Home </a>
                     </li>
 
-                    <li class="breadcrumb-item text-muted"> Blog </li>
-                    <li class="breadcrumb-item text-muted"> Blog Edit </li>
+                    <li class="breadcrumb-item text-muted"> Courses </li>
+                    <li class="breadcrumb-item text-muted"> Course Create </li>
 
                 </ul>
                 <!--end::Breadcrumb-->
@@ -37,14 +37,14 @@
             <div class="col-lg-12">
                 <div class="card-style mb-4">
                     <div class="card card-body">
-                        <form method="POST" action="{{ route('admin.blogs.update', $blog->id) }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('admin.courses.store') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <div class="input-style-1 col-lg-6 mt-4">
                                     <label for="title">Title:</label>
                                     <input type="text" placeholder="Enter Title" id="title"
                                         class="form-control @error('title') is-invalid @enderror" name="title"
-                                        value="{{ $blog->title ?? old('title') }}" />
+                                        value="{{ old('title') }}" />
                                     @error('title')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -53,15 +53,39 @@
                                 </div>
 
                                 <div class="input-style-1 col-lg-6 mt-4">
-                                    <label for="category">Blog Category:</label>
-                                    <select name="blog_category_id" id="category"
-                                        class="form-control @error('blog_category_id') is-invalid @enderror">
-                                        <option value="">Select Category</option>
-                                        @foreach ($blog_categories as $category)
-                                            <option value="{{ $category->id }}" @if($blog->blog_category_id == $category->id) selected @endif>{{ $category->name }}</option>
-                                        @endforeach
+                                    <label for="type">Course Type:</label>
+                                    <select name="type" id="type" class="form-control @error('type') is-invalid @enderror">
+                                        <option value="">Select Course Type</option>
+                                        <option value="free">Free</option>
+                                        <option value="premium">Premium</option>
                                     </select>
-                                    @error('blog_category_id')
+                                    @error('type')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="row">
+                               
+                                <div class="input-style-1 col-lg-6 mt-4">
+                                    <label for="price">Price:</label>
+                                    <input type="text" placeholder="Enter price" id="price"
+                                        class="form-control @error('price') is-invalid @enderror" name="price"
+                                        value="{{ old('price') }}" />
+                                    @error('price')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                
+                                <div class="input-style-1 col-lg-6 mt-4">
+                                    <label for="video_url">Video Link:</label>
+                                    <input type="text" placeholder="Enter Video Link" id="video_url"
+                                        class="form-control @error('video_url') is-invalid @enderror" name="video_url"
+                                        value="{{ old('video_url') }}" />
+                                    @error('video_url')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -71,22 +95,10 @@
 
                             <div class="row">
                                 <div class="input-style-1 col-lg-6 mt-4">
-                                    <label for="sub_description ">Sub Description :</label>
-                                    <textarea placeholder="Type here..." id="sub_description " name=" sub_description" rows="8"
-                                        class="form-control @error(' sub_description ') is-invalid @enderror">
-                                        {{ $blog->sub_description ?? old(' sub_description ') }}
-                                    </textarea>
-                                    @error(' sub_description ')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                                <div class="input-style-1 col-lg-6 mt-4">
                                     <label for="description"> Description :</label>
                                     <textarea placeholder="Type here..." id="content" name="description"
                                         class="form-control @error('description') is-invalid @enderror">
-                                        {{ $blog->description ?? old('description') }}
+                                        {{ old('description') }}
                                     </textarea>
                                     @error(' description ')
                                         <span class="invalid-feedback" role="alert">
@@ -94,22 +106,22 @@
                                         </span>
                                     @enderror
                                 </div>
-                            </div>
 
-                            <div class="input-style-1 mt-4">
-                                <label for="image">Image:</label>
-                                <input type="file" placeholder="Enter Image" id="image"
-                                    class="dropify form-control @error('image') is-invalid @enderror" name="image" data-default-file="{{ asset($blog->image ?? 'backend/images/placeholder/image_placeholder1.png') }}">
-                                @error('image')
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                <div class="input-style-1 col-lg-6 mt-4">
+                                    <label for="image_url">Image:</label>
+                                    <input type="file" placeholder="Enter Image" id="image_url"
+                                        class="dropify form-control @error('image_url') is-invalid @enderror" name="image_url" data-default-file="{{ asset('backend/images/placeholder/image_placeholder1.png') }}">
+                                    @error('image_url')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
                             </div>
 
                             <div class="col-12 mt-4">
                                 <button type="submit" class="btn btn-primary">Submit</button>
-                                <a href="{{ route('admin.blogs.index') }}" class="btn btn-danger me-2">Cancel</a>
+                                <a href="{{ route('admin.courses.index') }}" class="btn btn-danger me-2">Cancel</a>
                             </div>
                         </form>
                     </div>

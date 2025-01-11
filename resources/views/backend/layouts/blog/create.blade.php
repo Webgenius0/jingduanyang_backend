@@ -99,7 +99,7 @@
                             <div class="input-style-1 mt-4">
                                 <label for="image">Image:</label>
                                 <input type="file" placeholder="Enter Image" id="image"
-                                    class="dropify form-control @error('image') is-invalid @enderror" name="image" data-default-file="{{ asset('backend/images/placeholder/image_placeholder.png') }}">
+                                    class="dropify form-control @error('image') is-invalid @enderror" name="image" data-default-file="{{ asset('backend/images/placeholder/image_placeholder1.png') }}">
                                 @error('image')
                                     <span class="text-danger" role="alert">
                                         <strong>{{ $message }}</strong>

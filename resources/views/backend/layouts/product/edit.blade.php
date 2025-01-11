@@ -37,7 +37,8 @@
             <div class="col-lg-12">
                 <div class="card-style mb-4">
                     <div class="card card-body">
-                        <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('admin.products.update', $product->id) }}"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <div class="col-lg-8">
@@ -47,7 +48,7 @@
                                             <label for="title">Title:</label>
                                             <input type="text" placeholder="Enter Title" id="title"
                                                 class="form-control @error('title') is-invalid @enderror" name="title"
-                                                value="{{ old('title') }}" />
+                                                value="{{ $product->title ?? old('title') }}" />
                                             @error('title')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -61,7 +62,9 @@
                                                 class="form-control @error('product_category_id') is-invalid @enderror">
                                                 <option value="">Select Category</option>
                                                 @foreach ($categories as $category)
-                                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                    <option value="{{ $category->id }}"
+                                                        @if ($product->product_category_id == $category->id) selected @endif>
+                                                        {{ $category->name }}</option>
                                                 @endforeach
                                             </select>
                                             @error('product_category_id')
@@ -76,7 +79,7 @@
                                             <label for="price">Price:</label>
                                             <input type="text" placeholder="Enter Price" id="price"
                                                 class="form-control @error('price') is-invalid @enderror" name="price"
-                                                value="{{ old('price') }}" />
+                                                value="{{ $product->price ?? old('price') }}" />
                                             @error('price')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -88,7 +91,8 @@
                                             <label for="discount_price">Discount Price:</label>
                                             <input type="text" placeholder="Enter Discount Price" id="discount_price"
                                                 class="form-control @error('discount_price') is-invalid @enderror"
-                                                name="discount_price" value="{{ old('discount_price') }}" />
+                                                name="discount_price"
+                                                value="{{ $product->discount_price ?? old('discount_price') }}" />
                                             @error('discount_price')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -99,7 +103,7 @@
                                             <label for="quantity">Quantity:</label>
                                             <input type="number" min="1" placeholder="Enter Quantity" id="quantity"
                                                 class="form-control @error('quantity') is-invalid @enderror" name="quantity"
-                                                value="{{ old('quantity') }}" />
+                                                value="{{ $product->quantity ?? old('quantity') }}" />
                                             @error('quantity')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -113,7 +117,7 @@
                                             <label for="about">Product About :</label>
                                             <textarea placeholder="Type here..." id="about " name="about" rows="8"
                                                 class="form-control @error('about') is-invalid @enderror">
-                                                {{ old('about') }}
+                                                {{ $product->about ?? old('about') }}
                                             </textarea>
                                             @error('about')
                                                 <span class="invalid-feedback" role="alert">
@@ -125,7 +129,7 @@
                                             <label for="description">Description :</label>
                                             <textarea placeholder="Type here..." id="content" name="description"
                                                 class="form-control @error('description') is-invalid @enderror">
-                                                {{ old('description') }}
+                                                {{ $product->description ?? old('description') }}
                                             </textarea>
                                             @error(' description ')
                                                 <span class="invalid-feedback" role="alert">
@@ -144,11 +148,38 @@
                                             </button>
                                         </div>
                                         <div class="row" id="gallery-images-section">
+                                            @if (!empty($product->images) && count($product->images) > 0)
+                                                @foreach ($product->images as $index => $image)
+                                                    <div class="col-lg-4 flex justify-center items-center border single-gallery-image position-relative mb-4 mr-2"
+                                                        style="" id="single-image">
+                                                        <!-- Delete Button -->
+                                                        <div class="position-absolute top-0 end-0 px-2 py-1 rounded-full">
+                                                            <button type="button"
+                                                                onclick="showDeleteConfirm({{ $image->id }}, this, 'image', '{{ $image->images }}')"
+                                                                class="p-1 bg-danger text-white position-absolute"
+                                                                style="top: 0; right: -2px; z-index: 999; border-radius: 50%; border: 0;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-linecap="round"
+                                                                    stroke-linejoin="round" width="24" height="24"
+                                                                    stroke-width="2">
+                                                                    <path d="M18 6l-12 12"></path>
+                                                                    <path d="M6 6l12 12"></path>
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                        <!-- Gallery Image -->
+                                                        <img class="object-cover" style="width: 100%; height: 100%;"
+                                                            src="{{ asset($image->images) }}" alt="gallery image">
+                                                    </div>
+                                                @endforeach
+                                            @endif
                                             <div class="col-lg-4 single-gallery-image mb-2">
                                                 <input type="file" name="gallery_images[0]" id="gallery_0"
                                                     class="dropify @error('gallery_images.0') is-invalid @enderror"
-                                                    data-default-file="{{ asset('backend/images/placeholder/image_placeholder1.png') }}" />
-                                                @if($errors->has('gallery_images.0'))
+                                                    data-default-file="{{ asset('backend/images/placeholder/image_placeholder1.png') }}"
+                                                    data-height="300" />
+                                                @if ($errors->has('gallery_images.0'))
                                                     <div class="text-danger">{{ $message }}</div>
                                                 @endif
                                             </div>
@@ -168,18 +199,44 @@
                                                         <h5 class="card-title">Product Benefits (Click Add For More
                                                             Benefits)</h5>
                                                     </div>
+
+                                                    <!-- Existing Benefits Preloaded -->
+                                                    @foreach ($product->benefits as $key => $benefit)
+                                                        <tr>
+                                                            <td>
+                                                                <input type="text" name="product_benefits[]"
+                                                                    value="{{ $benefit->title }}"
+                                                                    class="form-control name_list"
+                                                                    placeholder="Product Benefits" />
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" name="remove"
+                                                                    onclick="showDeleteConfirm({{ $benefit->id }}, this, 'benefit', '{{ $benefit->title }}')"
+                                                                    class="btn btn-danger">
+                                                                    X
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+
+                                                    <!-- Add New Benefit -->
                                                     <tr>
-                                                        <td><input type="text" name="product_benefits[]"
+                                                        <td>
+                                                            <input type="text" name="product_benefits[]"
                                                                 class="form-control name_list"
-                                                                placeholder="Product Benefits" /></td>
-                                                        <td><button type="button" name="add" id="add"
-                                                                class="btn btn-success">Add +</button></td>
+                                                                placeholder="Product Benefits" />
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" name="add" id="add"
+                                                                class="btn btn-success">Add +</button>
+                                                        </td>
                                                     </tr>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                             <div class="col-12 mt-4">
                                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -214,8 +271,8 @@
                 </svg>
              </button>
              <input type="file" name="gallery_images[${imageSectionCount}]" id="gallery_${imageSectionCount}"
-                    class="dropify form-control @error('gallery_images.${imageSectionCount}') is-invalid @enderror" data-default-file="{{ asset('backend/images/placeholder/image_placeholder1.png') }}" />
-                @if($errors->has('gallery_images.${imageSectionCount}'))
+                    class="dropify form-control @error('gallery_images.${imageSectionCount}') is-invalid @enderror" data-default-file="{{ asset('backend/images/placeholder/image_placeholder1.png') }}" data-height="300"/>
+                @if ($errors->has('gallery_images.${imageSectionCount}'))
                     <div class="text-danger">{{ $message }}</div>
                 @endif
          </div>`)
@@ -241,6 +298,59 @@
                 var button_id = $(this).attr("id");
                 $('#row' + button_id + '').remove();
             })
+        });
+    </script>
+    <script>
+        function showDeleteConfirm(id, element, type = 'variant', path = null) {
+            event.preventDefault(); // Prevent default event behavior
+
+            Swal.fire({
+                title: 'Are you sure you want to delete this record?',
+                text: 'If you delete this, it will be gone forever.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (type === 'variant') {
+                        deleteVariant(id, element);
+                    } else if (type === 'image') {
+                        deleteImage(id, element, path);
+                    }
+                }
+            });
+        }
+
+        function deleteImage(id, element, path) {
+            $.ajax({
+                url: "{{ route('admin.products.image.delete', ':id') }}".replace(':id', id),
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
+                data: {
+                    path
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $(element).closest('#single-image').remove();
+                        toastr.success(response.message);
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(xhr) {
+                    let errorMessage = xhr.responseJSON?.message || 'Something went wrong. Please try again.';
+                    toastr.error(errorMessage);
+                }
+            });
+        }
+
+        // Event listener to remove a gallery image
+        $(document).on('click', '.remove-gallery-section', function() {
+            $(this).parent('.single-gallery-image').remove();
         });
     </script>
 @endpush

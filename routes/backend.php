@@ -41,6 +41,7 @@ Route::controller(ProductController::class)->group(function () {
     Route::post('/products/update/{id}', 'update')->name('admin.products.update');
     Route::delete('/products/delete/{id}', 'destroy')->name('admin.products.destroy');
     Route::post('/products/status/{id}','status')->name('admin.products.status');
+    Route::post('/products/image/delete/{id}','ImageDelete')->name('admin.products.image.delete');
 });
 
 Route::controller(CourseController::class)->group(function () {
@@ -50,6 +51,7 @@ Route::controller(CourseController::class)->group(function () {
     Route::get('/courses/edit/{id}', 'edit')->name('admin.courses.edit');
     Route::post('/courses/update/{id}', 'update')->name('admin.courses.update');
     Route::delete('/courses/delete/{id}', 'destroy')->name('admin.courses.destroy');
+    Route::post('/courses/status/{id}', 'status')->name('admin.courses.status');
 });
 
 //Team Route
