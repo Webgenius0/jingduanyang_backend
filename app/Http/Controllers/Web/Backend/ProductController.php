@@ -214,4 +214,33 @@ class ProductController extends Controller
             "message" => "Image deleted successfully."
         ], 200);
     }
+
+    public function destroy($id)
+    {
+        $data = Product::findOrFail($id);
+
+        if (empty($data)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found.',
+            ], 404);
+        }
+        if (file_exists(public_path($data->images))) {
+            unlink(public_path($data->images));
+        }
+
+        $data->forceDelete();
+
+        $benefits = ProductBenefit::where('product_id', $id)->get();
+        foreach ($benefits as $benefit) {
+            $benefit->delete();
+        }
+        
+        $data->delete();
+
+        return response()->json([
+            'success' => true,
+            'message'   => 'Deleted successfully.',
+        ]);
+    }
 }
