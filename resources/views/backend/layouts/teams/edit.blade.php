@@ -171,7 +171,7 @@
                             <div class="input-style-1 mt-4">
                                 <label for="image_url">Photo:</label>
                                 <input type="file" placeholder="Enter Image" id="image_url"
-                                    class="dropify form-control @error('image_url') is-invalid @enderror" name="image_url" data-default-file="{{ asset( $team->image_url ?? 'backend/images/placeholder/image_placeholder.png') }}">
+                                    class="dropify form-control @error('image_url') is-invalid @enderror" name="image_url" data-default-file="{{ asset( $team->image_url ?? 'backend/images/placeholder/image_placeholder1.png') }}">
                                 @error('image_url')
                                     <span class="text-danger" role="alert">
                                         <strong>{{ $message }}</strong>

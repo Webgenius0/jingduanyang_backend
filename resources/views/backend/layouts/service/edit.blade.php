@@ -83,7 +83,7 @@
                                 <label for="icon">Icon:</label>
                                 <input type="file" placeholder="Enter icon" id="icon"
                                     class="dropify form-control @error('icon') is-invalid @enderror" name="icon"
-                                    data-default-file="{{ asset( $service->icon ?? 'backend/images/placeholder/image_placeholder.png') }}">
+                                    data-default-file="{{ asset( $service->icon ?? 'backend/images/placeholder/image_placeholder1.png') }}">
                                 @error('icon')
                                 <span class="text-danger" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -95,7 +95,7 @@
                                 <label for="image">Image:</label>
                                 <input type="file" placeholder="Enter Image" id="image"
                                     class="dropify form-control @error('image') is-invalid @enderror" name="image"
-                                    data-default-file="{{ asset($service->image ?? 'backend/images/placeholder/image_placeholder.png') }}">
+                                    data-default-file="{{ asset($service->image ?? 'backend/images/placeholder/image_placeholder1.png') }}">
                                 @error('image')
                                 <span class="text-danger" role="alert">
                                     <strong>{{ $message }}</strong>

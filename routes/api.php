@@ -4,12 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\Web\FaqController;
 use App\Http\Controllers\Api\Web\BlogController;
-use App\Http\Controllers\Api\Web\HomePageController;
 use App\Http\Controllers\Api\Web\TeamController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\SocialAuthController;
+use App\Http\Controllers\Api\Web\CourseController;
 use App\Http\Controllers\Api\Web\AboutUsController;
+use App\Http\Controllers\Api\Web\ProductController;
 use App\Http\Controllers\Api\Web\ServiceController;
+use App\Http\Controllers\Api\Web\HomePageController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Web\DynamicPageController;
 use App\Http\Controllers\Api\Web\SystemSettingController;
@@ -121,4 +123,15 @@ Route::controller( HomePageController::class)->group(function () {
     Route::get('/home-page','getHomePage');
 });
 
+//Course route
+Route::controller( CourseController::class)->group(function () {
+    Route::get('/premium/courses','PremiumCourses');
+    Route::get('/free/courses','freeCourses');
+});
 
+
+//Product Route
+Route::controller(ProductController::class)->group(function () {
+    Route::get('/products','getProducts');
+    Route::get('/product-detail/{id}','productDetail');
+});

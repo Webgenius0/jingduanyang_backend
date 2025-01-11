@@ -56,7 +56,7 @@
                                 <label for="image_url">Icon:</label>
                                 <input type="file" placeholder="Enter Image" id="image_url"
                                     class="dropify form-control @error('image') is-invalid @enderror" name="image_url"
-                                    data-default-file="{{ asset($cms->image_url ?? 'backend/images/placeholder/image_placeholder.png') }}">
+                                    data-default-file="{{ asset($cms->image_url ?? 'backend/images/placeholder/image_placeholder1.png') }}">
                                 @error('image_url')
                                     <span class="text-danger" role="alert">
                                         <strong>{{ $message }}</strong>

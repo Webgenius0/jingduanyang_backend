@@ -24,7 +24,13 @@ class ProductController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('image', function ($data) {
-                    $url = asset($data->images->first()->images);
+                    // $url = asset($data->images->first()->images);
+                    if (empty($data->images->first()->images)) {
+                        $url = asset('backend/images/placeholder/Untitled.jpg');
+                        
+                    }else{
+                        $url = asset($data->images->first()->images);
+                    }
                     $image       = "<img src='$url' width='50' height='50'>";
                     return $image;
                 })
@@ -42,7 +48,9 @@ class ProductController extends Controller
                     return '$' . $data->price;
                 })
                 ->editColumn('discount_price', function ($data) {
-                    return '$' . $data->discount_price;
+                    if($data->discount_price > 0){
+                        return '$' . $data->discount_price;
+                    }
                 })
                 ->addColumn('status', function ($data) {
                     $status = ' <div class="form-check form-switch">';
@@ -142,6 +150,13 @@ class ProductController extends Controller
         }
     }
 
+    public function edit($id)
+    {
+        $product = Product::with(['images','benefits'])->findOrFail($id);
+        $categories = ProductCategory::all();
+        return view('backend.layouts.product.edit',  compact('product','categories'));
+    }
+
 
     public function status($id)
     {
@@ -169,5 +184,34 @@ class ProductController extends Controller
                 'data'    => $data,
             ]);
         }
+    }
+
+    public function ImageDelete($id)
+    {
+        $data = ProductImage::findOrFail($id);
+
+        if (empty($data)) {
+
+            return response()->json([
+                'success' => false,
+                "message" => "Item not found."
+            ], 404);
+
+        }
+
+        // Delete the image file from storage
+        if (file_exists(public_path($data->images))) {
+
+            unlink(public_path($data->images));
+
+        }
+
+        // Delete the record from the database
+        $data->delete();
+
+        return response()->json([
+            "success" => true,
+            "message" => "Image deleted successfully."
+        ], 200);
     }
 }
