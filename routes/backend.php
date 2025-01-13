@@ -1,21 +1,23 @@
 <?php
 
-use App\Http\Controllers\Web\Backend\BlogCategoryController;
-use App\Http\Controllers\Web\Backend\BlogController;
-use App\Http\Controllers\Web\Backend\Cms\AboutUsController;
-use App\Http\Controllers\Web\Backend\Cms\ConsultationController;
-use App\Http\Controllers\Web\Backend\Cms\EducationController;
-use App\Http\Controllers\Web\Backend\Cms\HelpController;
-use App\Http\Controllers\Web\Backend\Cms\HomeController;
-use App\Http\Controllers\Web\Backend\Cms\WhyChooseUsController;
-use App\Http\Controllers\Web\Backend\CourseController;
-use App\Http\Controllers\Web\Backend\DashboardController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Backend\FaqController;
-use App\Http\Controllers\Web\Backend\ProductCategoryController;
+use App\Http\Controllers\Web\Backend\BlogController;
+use App\Http\Controllers\Web\Backend\TeamController;
+use App\Http\Controllers\Web\Backend\CourseController;
 use App\Http\Controllers\Web\Backend\ProductController;
 use App\Http\Controllers\Web\Backend\ServiceController;
-use App\Http\Controllers\Web\Backend\TeamController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\Backend\Cms\HelpController;
+use App\Http\Controllers\Web\Backend\Cms\HomeController;
+use App\Http\Controllers\Web\Backend\DashboardController;
+use App\Http\Controllers\Web\Backend\Cms\AboutUsController;
+use App\Http\Controllers\Web\Backend\BlogCategoryController;
+use App\Http\Controllers\Web\Backend\Cms\EducationController;
+use App\Http\Controllers\Web\Backend\QuizzeCategoryController;
+use App\Http\Controllers\Web\Backend\QuizzeQuestionController;
+use App\Http\Controllers\Web\Backend\Cms\WhyChooseUsController;
+use App\Http\Controllers\Web\Backend\ProductCategoryController;
+use App\Http\Controllers\Web\Backend\Cms\ConsultationController;
 
 
 
@@ -142,7 +144,27 @@ Route::controller(HelpController::class)->group(function () {
 
 });
 
-//Cms Testimonial route
+//admin Quizze Categories Route
+Route::controller(QuizzeCategoryController::class)->group(function () {
+    Route::get('/quizze-categories','index')->name('admin.quizze_categories.index');
+    Route::get('/quizze-categories/create','create')->name('admin.quizze_categories.create');
+    Route::post('/quizze-categories/store','store')->name('admin.quizze_categories.store');
+    Route::get('/quizze-categories/edit/{id}','edit')->name('admin.quizze_categories.edit');
+    Route::post('/quizze-categories/update/{id}','update')->name('admin.quizze_categories.update');
+    Route::delete('/quizze-categories/delete/{id}','destroy')->name('admin.quizze_categories.destroy');
+    Route::post('/quizze-categories/status/{id}', 'status')->name('admin.quizze_categories.status');
+});
+
+//admin Quizze Questions Route
+Route::controller(QuizzeQuestionController::class)->group(function () {
+    Route::get('/quizze-questions','index')->name('admin.quizze_questions.index');
+    Route::get('/quizze-questions/create','create')->name('admin.quizze_questions.create');
+    Route::post('/quizze-questions/store','store')->name('admin.quizze_questions.store');
+    Route::get('/quizze-questions/edit/{id}','edit')->name('admin.quizze_questions.edit');
+    Route::post('/quizze-questions/update/{id}','update')->name('admin.quizze_questions.update');
+    Route::delete('/quizze-questions/delete/{id}','destroy')->name('admin.quizze_questions.destroy');
+    Route::post('/quizze-questions/status/{id}', 'status')->name('admin.quizze_questions.status');
+});
 
 //Cms About Us Page route
 Route::controller(AboutUsController::class)->group(function () {

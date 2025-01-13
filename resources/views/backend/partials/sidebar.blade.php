@@ -133,6 +133,35 @@
                 </div>
 
                 <div data-kt-menu-trigger="click"
+                    class="menu-item {{ request()->routeIs(['admin.quizze_categories.*', 'admin.quizze_questions.*']) ? 'active show' : '' }} menu-accordion">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fa-regular fa-file fs-2"></i>
+                        </span>
+                        <span class="menu-title">Quizzes</span>
+                        <span class="menu-arrow"></span>
+                    </span>
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a href="{{ route('admin.quizze_categories.index') }}"
+                                class="menu-link {{ request()->routeIs(['admin.quizze_categories.*']) ? 'active show' : '' }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Quizze Category</span>
+                            </a>
+                            <a href="{{ route('admin.quizze_questions.index') }}"
+                                class="menu-link {{ request()->routeIs(['admin.quizze_questions.*']) ? 'active show' : '' }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Quizze Question</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div data-kt-menu-trigger="click"
                     class="menu-item {{ request()->routeIs(['admin.blog_categories.*', 'admin.blogs.*']) ? 'active show' : '' }} menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">

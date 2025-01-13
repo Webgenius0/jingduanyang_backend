@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Controllers\Controller;
+use App\Models\PsychologistInformation;
+use Illuminate\Support\Facades\Validator;
 
-class UserController extends Controller {
+class UserController extends Controller
+{
     use ApiResponse;
 
     /**
@@ -18,7 +21,8 @@ class UserController extends Controller {
      * @return \Illuminate\Http\JsonResponse  JSON response with success or error.
      */
 
-    public function userData() {
+    public function userData()
+    {
 
         $user = auth()->user();
 
@@ -36,21 +40,23 @@ class UserController extends Controller {
      * @return \Illuminate\Http\JsonResponse  JSON response with success or error.
      */
 
-    public function userUpdate(Request $request) {
+    public function userUpdate(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
-            'avatar'  => 'nullable|image|mimes:jpeg,png,jpg,svg|max:5120',
-            'first_name'    => 'required|string|max:255',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:5120',
+            'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|max:255',
-            'phone' => 'nullable|string',
-            'gender' => 'nullable|string',
-            'birthdate' => 'nullable|string',
-            'state' => 'nullable|string',
+            'phone' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
+            'gender' => 'required|string',
+            'birthdate' => 'required|string',
+            'state' => 'required|string',
             'city' => 'nullable|string',
             'zip_code' => 'nullable|string',
             'therapy_type' => 'nullable|string',
-            'languages' => 'nullable|string',
+            'languages' => 'required|string',
+            'agree_to_terms' => 'required|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -75,13 +81,13 @@ class UserController extends Controller {
                     }
                 }
 
-                $image     = $request->file('avatar');
+                $image = $request->file('avatar');
                 $imageName = uploadImage($image, 'User/Avatar');
             } else {
                 $imageName = $user->avatar;
             }
 
-            $user->first_name    = $request->first_name;
+            $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->email = $request->email;
             $user->phone = $request->phone;
@@ -93,7 +99,7 @@ class UserController extends Controller {
             $user->therapy_type = $request->therapy_type;
             $user->languages = $request->languages;
             $user->agree_to_terms = $request->agree_to_terms;
-            $user->avatar  = $imageName;
+            $user->avatar = $imageName;
 
             $user->save();
 
@@ -109,7 +115,8 @@ class UserController extends Controller {
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse JSON response with success or error.
      */
-    public function logoutUser() {
+    public function logoutUser()
+    {
 
         try {
             JWTAuth::invalidate(JWTAuth::getToken());
@@ -126,7 +133,8 @@ class UserController extends Controller {
      *
      * @return \Illuminate\Http\JsonResponse JSON response with success or error.
      */
-    public function deleteUser() {
+    public function deleteUser()
+    {
         try {
             // Get the authenticated user
             $user = auth()->user();
@@ -149,6 +157,96 @@ class UserController extends Controller {
 
             return $this->success([], 'User deleted successfully', 200);
         } catch (\Exception $e) {
+            return $this->error([], $e->getMessage(), 500);
+        }
+    }
+
+    public function psychologistInformation(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:5120',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
+            'gender' => 'required|string',
+            'birthdate' => 'required|string',
+            'languages' => 'required|string',
+            'qualification' => 'required|string',
+            'ahpra_registration_number' => 'required|string',
+            'therapy_mode' => 'required|string',
+            'client_age' => 'nullable|string',
+            'session_length' => 'nullable|string',
+            'cust_per_session' => 'nullable|string',
+            'medicare_rebate_amount' => 'nullable|string',
+            'areas_of_expertise' => 'nullable|string',
+            'aphra_certificate' => 'required|mimes:pdf,doc,docx|max:5120',
+            'description' => 'nullable|string',
+            'agree_to_terms' => 'required|boolean',
+            'verified_registered' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error($validator->errors(), "Validation Error", 422);
+        }
+
+        try {
+            // Find the user by ID
+            $user = auth()->user();
+
+            // If user is not found, return an error response
+            if (!$user) {
+                return $this->error([], "User Not Found", 404);
+            }
+
+            if ($request->hasFile('avatar')) {
+                if ($user->avatar) {
+                    $previousImagePath = public_path($user->avatar);
+                    if (file_exists($previousImagePath)) {
+                        unlink($previousImagePath);
+                    }
+                }
+                $image = $request->file('avatar');
+                $imageName = uploadImage($image, 'User/Avatar');
+            } else {
+                $imageName = $user->avatar;
+            }
+
+            DB::beginTransaction();
+                $user->createOrUpdate([
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'phone' => $request->phone,
+                    'gender' => $request->gender,
+                    'birthdate' => $request->birthdate,
+                    'languages' => $request->languages,
+                    'agree_to_terms' => $request->agree_to_terms,
+                    'verified_registered' => $request->verified_registered,
+                    'avatar' => $imageName,
+                ]);
+
+                if($request->hasFile('aphra_certificate')){
+                    $image = $request->file('aphra_certificate');
+                    $imageName = uploadImage($image, 'User/certificate'); 
+                }
+            
+                PsychologistInformation::createOrUpdate([
+                    'user_id' => $user->id,
+                    'qualification' => $request->qualification,
+                    'ahpra_registration_number' => $request->ahpra_registration_number,
+                    'therapy_mode' => $request->therapy_mode,
+                    'client_age' => $request->client_age,
+                    'session_length' => $request->session_length,
+                    'cust_per_session' => $request->cust_per_session,
+                    'medicare_rebate_amount' => $request->medicare_rebate_amount,
+                    'areas_of_expertise' => $request->areas_of_expertise,
+                    'description' => $request->description,
+                    'aphra_certificate' => $imageName
+                ]);
+            DB::commit();
+            return $this->success($user, 'User updated successfully', 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return $this->error([], $e->getMessage(), 500);
         }
     }
