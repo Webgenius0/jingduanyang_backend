@@ -16,11 +16,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('qualification')->nullable();
             $table->string('ahpra_registration_number')->nullable();
-            $table->string('therapy_mode')->nullable();
+            $table->enum('therapy_mode', ['online', 'offline', 'both'])->default('both');
             $table->string('client_age')->nullable();
             $table->string('session_length')->nullable();
-            $table->string('cust_per_session')->nullable();
-            $table->string('medicare_rebate_amount')->nullable();
+            $table->float('cust_per_session', 8, 2)->nullable();
+            $table->float('medicare_rebate_amount', 8, 2)->nullable();
             $table->string('areas_of_expertise')->nullable();
             $table->string('aphra_certificate')->nullable();
             $table->text('description')->nullable();

@@ -70,5 +70,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Appointment::class);
     }
-
+    
+    // Relationship with PsychologistInformation
+    public function psychologistInformation()
+    {
+        return $this->hasOne(PsychologistInformation::class);
+    }
 }

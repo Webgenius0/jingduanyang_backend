@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\PsychologistInformation;
 use Illuminate\Support\Facades\Validator;
 
@@ -163,14 +164,14 @@ class UserController extends Controller
 
     public function psychologistInformation(Request $request)
     {
-
+        // Validation
         $validator = Validator::make($request->all(), [
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:5120',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'phone' => 'required|string|regex:/^\+?[0-9]{10,15}$/',
             'gender' => 'required|string',
-            'birthdate' => 'required|string',
+            'birthdate' => 'required|date',
             'languages' => 'required|string',
             'qualification' => 'required|string',
             'ahpra_registration_number' => 'required|string',
@@ -186,20 +187,22 @@ class UserController extends Controller
             'verified_registered' => 'required|boolean',
         ]);
 
+        // Return validation errors
         if ($validator->fails()) {
             return $this->error($validator->errors(), "Validation Error", 422);
         }
 
         try {
-            // Find the user by ID
-            $user = auth()->user();
+            // Get authenticated user with psychologist information
+            $user = Auth::user();
 
-            // If user is not found, return an error response
             if (!$user) {
                 return $this->error([], "User Not Found", 404);
             }
 
+            // Handle avatar upload
             if ($request->hasFile('avatar')) {
+                // Delete previous avatar if exists
                 if ($user->avatar) {
                     $previousImagePath = public_path($user->avatar);
                     if (file_exists($previousImagePath)) {
@@ -207,30 +210,55 @@ class UserController extends Controller
                     }
                 }
                 $image = $request->file('avatar');
-                $imageName = uploadImage($image, 'User/Avatar');
+                $avatarPath = uploadImage($image, 'User/Avatar');
             } else {
-                $imageName = $user->avatar;
+                $avatarPath = $user->avatar;
             }
 
+            // Start transaction
             DB::beginTransaction();
-                $user->createOrUpdate([
-                    'first_name' => $request->first_name,
-                    'last_name' => $request->last_name,
-                    'phone' => $request->phone,
-                    'gender' => $request->gender,
-                    'birthdate' => $request->birthdate,
-                    'languages' => $request->languages,
-                    'agree_to_terms' => $request->agree_to_terms,
-                    'verified_registered' => $request->verified_registered,
-                    'avatar' => $imageName,
-                ]);
 
-                if($request->hasFile('aphra_certificate')){
-                    $image = $request->file('aphra_certificate');
-                    $imageName = uploadImage($image, 'User/certificate'); 
-                }
-            
-                PsychologistInformation::createOrUpdate([
+            // Update user details
+            $user->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
+                'gender' => $request->gender,
+                'birthdate' => $request->birthdate,
+                'languages' => $request->languages,
+                'agree_to_terms' => $request->agree_to_terms,
+                'verified_registered' => $request->verified_registered,
+                'avatar' => $avatarPath,
+            ]);
+
+            // Handle aphra_certificate upload
+            if ($request->hasFile('aphra_certificate')) {
+                $certificate = $request->file('aphra_certificate');
+                $certificatePath = uploadImage($certificate, 'User/Certificate');
+            } else {
+                $certificatePath = null;
+            }
+
+            // Check if PsychologistInformation already exists
+            $psychologistInfo = PsychologistInformation::where('user_id', $user->id)->first();
+
+            if ($psychologistInfo) {
+                // Update existing psychologist information
+                $psychologistInfo->update([
+                    'qualification' => $request->qualification,
+                    'ahpra_registration_number' => $request->ahpra_registration_number,
+                    'therapy_mode' => $request->therapy_mode,
+                    'client_age' => $request->client_age,
+                    'session_length' => $request->session_length,
+                    'cust_per_session' => $request->cust_per_session,
+                    'medicare_rebate_amount' => $request->medicare_rebate_amount,
+                    'areas_of_expertise' => $request->areas_of_expertise,
+                    'description' => $request->description,
+                    'aphra_certificate' => $certificatePath ?? $psychologistInfo->aphra_certificate,
+                ]);
+            } else {
+                // Create new psychologist information
+                PsychologistInformation::create([
                     'user_id' => $user->id,
                     'qualification' => $request->qualification,
                     'ahpra_registration_number' => $request->ahpra_registration_number,
@@ -241,13 +269,19 @@ class UserController extends Controller
                     'medicare_rebate_amount' => $request->medicare_rebate_amount,
                     'areas_of_expertise' => $request->areas_of_expertise,
                     'description' => $request->description,
-                    'aphra_certificate' => $imageName
+                    'aphra_certificate' => $certificatePath,
                 ]);
+            }
+
+            // Commit transaction
             DB::commit();
+
             return $this->success($user, 'User updated successfully', 200);
         } catch (\Exception $e) {
+            // Rollback transaction on error
             DB::rollBack();
             return $this->error([], $e->getMessage(), 500);
         }
     }
+
 }
