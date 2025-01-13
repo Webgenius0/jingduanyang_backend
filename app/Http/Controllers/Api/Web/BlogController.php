@@ -11,10 +11,15 @@ class BlogController extends Controller
 {
     use ApiResponse;
 
-    public function blogs()
+    public function blogs(Request $request)
     {
+        $limit = $request->limit;
+        if(!$limit)
+        {
+            $limit = 12;
+        }
 
-        $data = Blog::where('status','active')->get();
+        $data = Blog::where('status','active')->paginate($limit);
 
         if (!$data) {
             return $this->error([], 'Data Not Found', 404);

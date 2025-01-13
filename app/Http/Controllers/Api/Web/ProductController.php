@@ -11,9 +11,14 @@ class ProductController extends Controller
 {
     use ApiResponse;
     
-    public function getProducts()
+    public function getProducts(Request $request)
     {
-        $data = Product::with(['images'])->where('status','active')->paginate(20);
+        $limit = $request->limit;
+        if(!$limit)
+        {
+            $limit = 20;
+        }
+        $data = Product::with(['images'])->where('status','active')->paginate($limit);
 
         if (!$data) {
             return $this->error([], 'Data Not Found', 404);

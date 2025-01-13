@@ -16,9 +16,15 @@ class ServiceController extends Controller
     use ApiResponse;
 
 
-    public function getServices() {
+    public function getServices(Request $request) {
 
-        $data = Service::where('status','active')->get();
+        $limit = $request->limit;
+        if(!$limit)
+        {
+            $limit = 12;
+        }
+
+        $data = Service::where('status','active')->paginate($limit);
 
         if (!$data) {
             return $this->error([], 'Data Not Found', 404);

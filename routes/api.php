@@ -71,6 +71,12 @@ Route::group(['middleware' => ['jwt.verify']], function() {
         Route::post('/data/update', 'userUpdate');
         Route::post('/logout', 'logoutUser');
         Route::delete('/delete', 'deleteUser');
+
+        Route::post('psychologist/information', 'psychologistInformation');
+    });
+
+    Route::controller(TeamController::class)->group(function(){
+        Route::post('/appotment','appotment');
     });
 
 });

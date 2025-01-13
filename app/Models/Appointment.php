@@ -2,29 +2,32 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Team extends Model
+class Appointment extends Model
 {
-    use HasFactory, SoftDeletes;
-
     protected $guarded = [];
 
     protected $casts = [
         'id' => 'integer',
+        'user_id' => 'integer',
+        'team_id' => 'integer',
     ];
 
     protected $hidden = [
         'status',
-        'created_at',
         'updated_at',
         'deleted_at',
     ];
 
-    public function appointments()
+    public function user()
     {
-        return $this->hasMany(Appointment::class);
+        return $this->belongsTo(User::class);
     }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
+
 }

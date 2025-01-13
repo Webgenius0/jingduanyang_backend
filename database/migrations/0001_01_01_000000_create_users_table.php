@@ -29,6 +29,7 @@ return new class extends Migration
             $table->enum('role', ['admin', 'client','doctor'])->default('client');
             $table->string('avatar')->nullable();
             $table->boolean('agree_to_terms')->default(false); // Field to store agreement to terms
+            $table->boolean('verified_registered')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
