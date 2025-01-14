@@ -84,6 +84,24 @@ Route::group(['middleware' => ['jwt.verify']], function () {
         Route::get('/total-question', 'totalQuestion');
     });
 
+    //Client Dashboard
+    Route::group(['middleware' => ['client']], function () {
+
+        Route::controller(UserController::class)->prefix('users')->group(function () {
+            Route::post('/logout', 'logoutUser');
+        });
+
+    });
+
+    //Doctor Dashboard
+    Route::group(['middleware' => ['doctor']], function () {
+
+        Route::controller(UserController::class)->prefix('users')->group(function () {
+            Route::post('/logout', 'logoutUser');
+        });
+        
+    });
+
 });
 
 //System Setting route

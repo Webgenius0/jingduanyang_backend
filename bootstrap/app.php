@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Middleware\Admin;
+use App\Http\Middleware\Client;
+use App\Http\Middleware\Doctor;
+use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\JWTMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\JWTMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -33,6 +35,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'jwt.verify' => JWTMiddleware::class,
             'admin' => Admin::class,
+            'doctor' => Doctor::class,
+            'client' => Client::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
