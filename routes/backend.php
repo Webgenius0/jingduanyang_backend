@@ -170,7 +170,16 @@ Route::controller(QuizzeQuestionController::class)->group(function () {
 Route::controller(AboutUsController::class)->group(function () {
     Route::get('/cms/about-us','index')->name('cms.about_us.index');
     Route::post('/cms/about-us/store', 'store')->name('cms.about_us.store');
+
+    //Cms About Us Track Record route
+    Route::get('/cms/about-us/track-record/index', 'TrackRecord')->name('cms.track_record.index');
+    Route::post('/cms/about-us/empowered-clients/store', 'EmpoweredClients')->name('cms.empowered_clients.store');
+    Route::post('/cms/about-us/patients-satisfaction/store', 'PatientsSatisfaction')->name('cms.patients_satisfaction.store');
+    Route::post('/cms/about-us/years-of-experience/store', 'YearsOfExperience')->name('cms.years_of_experience.store');
+    Route::post('/cms/about-us/certified-expert/store', 'CertifiedExpert')->name('cms.certified_expert.store');
+    Route::post('/cms/about-us/total-employees/store', 'TotalEmployees')->name('cms.total_employees.store');
 });
+
 
 //Why Choose Us Route
 Route::controller(WhyChooseUsController::class)->group(function () {

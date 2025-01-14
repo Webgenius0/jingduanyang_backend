@@ -206,7 +206,7 @@
                 </div>
 
                 <div data-kt-menu-trigger="click"
-                    class="menu-item {{ request()->routeIs(['cms.home.hero_section','cms.about_us.*','cms.why_choose_us.*','cms.home.help_section.*','cms.home.education.index','cms.home.consultation.index']) ? 'active show' : '' }} menu-accordion">
+                    class="menu-item {{ request()->routeIs(['cms.home.hero_section','cms.about_us.*','cms.why_choose_us.*','cms.home.help_section.*','cms.home.education.index','cms.home.consultation.index','cms.track_record.*']) ? 'active show' : '' }} menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">
                             <i class="fa-regular fa-file fs-2"></i>
@@ -261,7 +261,7 @@
                             </a>
                         </div>
                     </div>
-
+                    
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
                             <a href="{{ route('cms.about_us.index') }}"
@@ -270,6 +270,18 @@
                                     <span class="bullet bullet-dot"></span>
                                 </span>
                                 <span class="menu-title">About Us</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a href="{{ route('cms.track_record.index') }}"
+                                class="menu-link {{ request()->routeIs(['cms.track_record.index']) ? 'active show' : '' }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Track Record</span>
                             </a>
                         </div>
                     </div>
