@@ -1,21 +1,22 @@
 <?php
 
-use App\Http\Controllers\Api\Auth\LoginController;
-use App\Http\Controllers\Api\Auth\RegisterController;
-use App\Http\Controllers\Api\SocialAuthController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\Web\AboutUsController;
-use App\Http\Controllers\Api\Web\BlogController;
-use App\Http\Controllers\Api\Web\CourseController;
-use App\Http\Controllers\Api\Web\DynamicPageController;
-use App\Http\Controllers\Api\Web\FaqController;
-use App\Http\Controllers\Api\Web\HomePageController;
-use App\Http\Controllers\Api\Web\ProductController;
-use App\Http\Controllers\Api\Web\QuizzeController;
-use App\Http\Controllers\Api\Web\ServiceController;
-use App\Http\Controllers\Api\Web\SystemSettingController;
-use App\Http\Controllers\Api\Web\TeamController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\Web\FaqController;
+use App\Http\Controllers\Api\Web\BlogController;
+use App\Http\Controllers\Api\Web\TeamController;
+use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\SocialAuthController;
+use App\Http\Controllers\Api\Web\CourseController;
+use App\Http\Controllers\Api\Web\QuizzeController;
+use App\Http\Controllers\Api\Web\AboutUsController;
+use App\Http\Controllers\Api\Web\ProductController;
+use App\Http\Controllers\Api\Web\ServiceController;
+use App\Http\Controllers\Api\Web\HomePageController;
+use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\Web\DynamicPageController;
+use App\Http\Controllers\Api\Web\SystemSettingController;
+use App\Http\Controllers\Api\DoctorDashboard\AppointmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,7 +100,11 @@ Route::group(['middleware' => ['jwt.verify']], function () {
         Route::controller(UserController::class)->prefix('users')->group(function () {
             Route::post('/logout', 'logoutUser');
         });
-        
+
+        Route::controller(AppointmentController::class)->group(function () {
+            Route::get('/appointments', 'getAppointments');
+        });
+
     });
 
 });

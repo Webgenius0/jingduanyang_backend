@@ -19,8 +19,9 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('email');
             $table->string('phone');
+            $table->integer('age')->nullable();
             $table->string('consultant_type');
-            $table->string('appointment_date');
+            $table->date('appointment_date');
             $table->string('appointment_time');
             $table->text('message')->nullable();
             $table->enum('status', ['pending', 'accept', 'completed','cancelled'])->default('pending');

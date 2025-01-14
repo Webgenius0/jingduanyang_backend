@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->string('birthdate')->nullable();
+            $table->date('birthdate')->nullable();
             $table->string('gender')->nullable(); // Field to store gender
             $table->string('phone')->nullable();
             $table->string('state')->nullable();
