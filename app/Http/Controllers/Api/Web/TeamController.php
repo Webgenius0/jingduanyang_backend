@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Api\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
-use App\Models\PsychologistInformation;
 use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;

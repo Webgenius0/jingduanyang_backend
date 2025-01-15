@@ -270,6 +270,7 @@ class UserController extends Controller
                     'experience' => $request->experience,
                     'description' => $request->description,
                     'aphra_certificate' => $certificatePath,
+                    'location' => $request->location
                 ]);
             }
 
