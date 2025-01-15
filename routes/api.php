@@ -108,8 +108,9 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::get('/appointment-meeting', 'appointmentMeeting');
             Route::post('/appointment-status/{id}', 'appointmentStatus');
             Route::get('/appointment-schedule', 'appointmentSchedule');
-
             Route::post('/prescription/create', 'createPrescription');
+
+            Route::get('/upcoming-appointments', 'upcomingAppointments');
         });
 
     });

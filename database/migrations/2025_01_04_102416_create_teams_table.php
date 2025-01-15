@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('consult_duration')->nullable();
             $table->integer('total_fees');
             $table->string('image_url')->nullable();
+            $table->integer('views')->nullable();
             $table->enum('status', ['active', 'inactive']);
             $table->timestamps();
             $table->softDeletes();

@@ -180,7 +180,7 @@ class UserController extends Controller
             'session_length' => 'nullable|string',
             'cust_per_session' => 'nullable|string',
             'medicare_rebate_amount' => 'nullable|string',
-            'areas_of_expertise' => 'nullable|string',
+            'experience' => 'required|numeric',
             'aphra_certificate' => 'required|mimes:pdf,doc,docx|max:5120',
             'description' => 'nullable|string',
             'agree_to_terms' => 'required|boolean',
@@ -267,7 +267,7 @@ class UserController extends Controller
                     'session_length' => $request->session_length,
                     'cust_per_session' => $request->cust_per_session,
                     'medicare_rebate_amount' => $request->medicare_rebate_amount,
-                    'areas_of_expertise' => $request->areas_of_expertise,
+                    'experience' => $request->experience,
                     'description' => $request->description,
                     'aphra_certificate' => $certificatePath,
                 ]);

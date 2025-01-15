@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +8,7 @@ class Appointment extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'id' => 'integer',
+        'id'      => 'integer',
         'user_id' => 'integer',
         'team_id' => 'integer',
     ];
@@ -25,9 +24,9 @@ class Appointment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function team()
+    public function psychologistInformation()
     {
-        return $this->belongsTo(Team::class);
+        return $this->belongsTo(PsychologistInformation::class);
     }
 
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -61,8 +60,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return [
             'email_verified_at' => 'datetime',
-            'agree_to_terms' => 'boolean',
-            'id' => 'integer',
+            'agree_to_terms'    => 'boolean',
+            'id'                => 'integer',
         ];
     }
 
@@ -70,7 +69,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Appointment::class);
     }
-    
+
     // Relationship with PsychologistInformation
     public function psychologistInformation()
     {

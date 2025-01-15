@@ -94,7 +94,7 @@
                     </a>
                 </div>
 
-                <div data-kt-menu-trigger="click"
+                {{-- <div data-kt-menu-trigger="click"
                     class="menu-item {{ request()->routeIs(['admin.teams.*']) ? 'active show' : '' }} menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -115,7 +115,7 @@
 
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('admin.faq.*') ? 'active' : '' }}"

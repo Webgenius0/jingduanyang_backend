@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -24,9 +23,10 @@ class PsychologistInformation extends Model
      * @var array<string, string>
      */
 
-    protected function casts(): array {
+    protected function casts(): array
+    {
         return [
-            'id' => 'integer',
+            'id'      => 'integer',
             'user_id' => 'integer',
         ];
     }
@@ -34,6 +34,11 @@ class PsychologistInformation extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
     }
 
 }

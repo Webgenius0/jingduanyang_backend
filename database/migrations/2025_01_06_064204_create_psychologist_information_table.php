@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('session_length')->nullable();
             $table->float('cust_per_session', 8, 2)->nullable();
             $table->float('medicare_rebate_amount', 8, 2)->nullable();
-            $table->string('areas_of_expertise')->nullable();
+            $table->integer('views')->nullable();
+            $table->string('experience')->nullable();
             $table->string('aphra_certificate')->nullable();
             $table->text('description')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('inactive');
