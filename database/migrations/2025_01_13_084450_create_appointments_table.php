@@ -23,6 +23,10 @@ return new class extends Migration
             $table->string('consultant_type');
             $table->date('appointment_date');
             $table->string('appointment_time');
+            $table->string('available_day')->nullable();
+            $table->string('available_times')->nullable();
+            $table->string('meting_link')->nullable();
+            $table->text('note')->nullable();
             $table->text('message')->nullable();
             $table->enum('status', ['pending', 'accept', 'completed','cancelled'])->default('pending');
             $table->timestamps();

@@ -75,7 +75,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     });
 
     Route::controller(TeamController::class)->group(function () {
-        Route::post('/appotment', 'appotment');
+        Route::post('/appointments', 'appotment');
     });
     //Quzzes Route
     Route::controller(QuizzeController::class)->group(function () {
@@ -103,6 +103,13 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
         Route::controller(AppointmentController::class)->group(function () {
             Route::get('/appointments', 'getAppointments');
+            Route::get('/appointment-detail/{id}', 'appointmentDetail');
+            Route::post('/appointment-schedule/update/{id}', 'appointmentScheduleUpdate');
+            Route::get('/appointment-meeting', 'appointmentMeeting');
+            Route::post('/appointment-status/{id}', 'appointmentStatus');
+            Route::get('/appointment-schedule', 'appointmentSchedule');
+
+            Route::post('/prescription/create', 'createPrescription');
         });
 
     });
