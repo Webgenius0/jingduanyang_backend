@@ -159,11 +159,17 @@ class AppointmentController extends Controller
             return $this->error($validator->errors(), "Validation Error", 422);
         }
 
+        $user = auth()->user();
+
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+
         try {
             DB::beginTransaction();
 
             $prescription = Prescription::create([
-                'user_id'        => auth()->user()->id,
+                'user_id'        => $user->id,
                 'appointment_id' => $request->appointment_id,
                 'date'           => $request->date,
                 'age'            => $request->age,

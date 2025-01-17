@@ -215,6 +215,28 @@ class ProductController extends Controller
         ], 200);
     }
 
+    public function BenefitDelete($id)
+    {
+        $data = ProductBenefit::findOrFail($id);
+
+        if (empty($data)) {
+
+            return response()->json([
+                'success' => false,
+                "message" => "Item not found."
+            ], 404);
+
+        }
+
+        // Delete the record from the database
+        $data->delete();
+
+        return response()->json([
+            "success" => true,
+            "message" => "Benefit deleted successfully."
+        ], 200);
+    }
+
     public function destroy($id)
     {
         $data = Product::findOrFail($id);

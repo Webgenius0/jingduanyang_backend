@@ -16,7 +16,11 @@ use App\Http\Controllers\Api\Web\HomePageController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Web\DynamicPageController;
 use App\Http\Controllers\Api\Web\SystemSettingController;
+use App\Http\Controllers\Web\Backend\DashboardController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+use App\Http\Controllers\Api\ClientDashboard\DashboradController;
 use App\Http\Controllers\Api\DoctorDashboard\AppointmentController;
+use App\Http\Controllers\Api\ClientDashboard\ClientAppointmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +94,21 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
         Route::controller(UserController::class)->prefix('users')->group(function () {
             Route::post('/logout', 'logoutUser');
+        });
+
+        Route::controller(ClientAppointmentController::class)->group(function () {
+            Route::get('/client-appointments', 'getAppointments');
+            // Route::get('/appointment-detail/{id}', 'appointmentDetail');
+            Route::get('/client-appointment-meeting', 'appointmentMeeting');
+
+            Route::get('/doctor', 'getDoctor');
+            Route::get('/client-prescription/{id}', 'getClientPrescription');
+        });
+
+        Route::controller(DashboradController::class)->group(function () {
+            Route::get('/doctor-list', 'doctorList');
+            Route::get('/previous-appointments ', 'previousAppointments');
+            Route::get('/active-appointments', 'activeAppointments');
         });
 
     });

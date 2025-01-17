@@ -18,4 +18,9 @@ class Test extends Model
     {
         return $this->belongsTo(Prescription::class);
     }
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }

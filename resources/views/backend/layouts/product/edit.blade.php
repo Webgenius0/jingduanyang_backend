@@ -203,11 +203,11 @@
                                                     <!-- Existing Benefits Preloaded -->
                                                     @foreach ($product->benefits as $key => $benefit)
                                                         <tr>
-                                                            <td>
+                                                            <td id="single-benefit">
                                                                 <input type="text" name="product_benefits[]"
                                                                     value="{{ $benefit->title }}"
                                                                     class="form-control name_list"
-                                                                    placeholder="Product Benefits" />
+                                                                    placeholder="Product Benefits" readonly />
                                                             </td>
                                                             <td>
                                                                 <button type="button" name="remove"
@@ -301,7 +301,7 @@
         });
     </script>
     <script>
-        function showDeleteConfirm(id, element, type = 'variant', path = null) {
+        function showDeleteConfirm(id, element, type = 'benefit', path = null) {
             event.preventDefault(); // Prevent default event behavior
 
             Swal.fire({
@@ -314,7 +314,7 @@
                 confirmButtonText: 'Yes, delete it!',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    if (type === 'variant') {
+                    if (type === 'benefit') {
                         deleteVariant(id, element);
                     } else if (type === 'image') {
                         deleteImage(id, element, path);
@@ -352,5 +352,30 @@
         $(document).on('click', '.remove-gallery-section', function() {
             $(this).parent('.single-gallery-image').remove();
         });
+
+        function deleteBenefit(id, element, path) {
+            $.ajax({
+                url: "{{ route('admin.products.benefit.delete', ':id') }}".replace(':id', id),
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
+                data: {
+                    path
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $(element).closest('#single-benefit').remove();
+                        toastr.success(response.message);
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(xhr) {
+                    let errorMessage = xhr.responseJSON?.message || 'Something went wrong. Please try again.';
+                    toastr.error(errorMessage);
+                }
+            });
+        }
     </script>
 @endpush
