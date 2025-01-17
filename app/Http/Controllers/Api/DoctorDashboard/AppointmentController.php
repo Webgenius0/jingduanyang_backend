@@ -1,15 +1,17 @@
 <?php
 namespace App\Http\Controllers\Api\DoctorDashboard;
 
-use App\Http\Controllers\Controller;
-use App\Models\Appointment;
-use App\Models\Medicine;
-use App\Models\Prescription;
-use App\Models\Test;
-use App\Traits\ApiResponse;
 use Carbon\Carbon;
+use App\Models\Test;
+use App\Models\Medicine;
+use App\Models\Appointment;
+use App\Traits\ApiResponse;
+use App\Models\Prescription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AppintmentScheduleUpdate;
 use Illuminate\Support\Facades\Validator;
 
 class AppointmentController extends Controller
@@ -83,6 +85,9 @@ class AppointmentController extends Controller
         $data->meting_link      = $request->meting_link;
         $data->note             = $request->note;
         $data->save();
+
+        Mail::to($data->email)->send(new AppintmentScheduleUpdate($data));
+
 
         return $this->success($data, 'Appointment data updated successfully', 200);
     }

@@ -122,7 +122,7 @@ class ProductController extends Controller
             }
 
              // gallery images
-             if ($request->hasFile('gallery_images')) {
+            if ($request->hasFile('gallery_images')) {
                 foreach ($request->file('gallery_images') as $image) {
                     $imageName    = uploadImage($image, 'product/images');
                     ProductImage::create([
@@ -155,6 +155,77 @@ class ProductController extends Controller
         $product = Product::with(['images','benefits'])->findOrFail($id);
         $categories = ProductCategory::all();
         return view('backend.layouts.product.edit',  compact('product','categories'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        // dd($request->all());
+        $request->validate([
+            'title'=> 'required|string|max:255',
+            'price'=> 'required|numeric',
+            'discount_price'=> 'required|numeric',
+            'quantity' =>'required|numeric',
+            'gallery_images.*' => 'nullable|image|mimes:png,jpg,jpeg|max:4048',
+            'product_benefits.*' => 'nullable|string',
+            'description' => 'required|string',
+            'about' => 'nullable|string|max:40000',
+        ],[
+            'gallery_images.*.required' => 'Each image is required.',
+            'gallery_images.*.image' => 'Each file must be an image.',
+            'gallery_images.*.mimes' => 'Only jpeg, png, jpg, and gif files are allowed.',
+            'gallery_images.*.max' => 'Image size must not exceed 2MB.',
+        ]);
+
+        
+
+        try
+        {
+            DB::beginTransaction();
+            $product = Product::findOrFail($id);
+            $product->update([
+                'title'=> $request->title,
+                'slug'=> generateUniqueSlug($request->input('title'), 'products'),
+                'price'=> $request->price,
+                'discount_price'=> $request->discount_price,
+                'quantity' => $request->quantity,
+                'description' => $request->description,
+                'about'=> $request->about,
+                'product_category_id' => $request->product_category_id,
+            ]);
+
+            if ($request->hasFile('image')) {
+                $image        = $request->file('image');
+                $imageName    = uploadImage($image, 'Service');
+            }
+
+             // gallery images
+             if ($request->hasFile('gallery_images')) {
+                foreach ($request->file('gallery_images') as $image) {
+                    $imageName    = uploadImage($image, 'product/images');
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'images' => $imageName,
+                    ]);
+                }
+            }
+            // product benefits
+            
+            if ($request->product_benefits[0] != null) {
+                foreach ($request->product_benefits as $benefit) {
+                    ProductBenefit::create([
+                        'product_id' => $product->id,
+                        'title' => $benefit,
+                    ]);
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('admin.products.index')->with('t-success', 'Product updated successfully');
+        }catch(\Exception $e)
+        {
+            DB::rollBack();
+            return redirect()->back()->with('t-error', $e->getMessage());
+        }
     }
 
 

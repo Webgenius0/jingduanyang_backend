@@ -204,7 +204,7 @@
                                                     @foreach ($product->benefits as $key => $benefit)
                                                         <tr>
                                                             <td id="single-benefit">
-                                                                <input type="text" name="product_benefits[]"
+                                                                <input type="text"
                                                                     value="{{ $benefit->title }}"
                                                                     class="form-control name_list"
                                                                     placeholder="Product Benefits" readonly />
@@ -315,7 +315,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     if (type === 'benefit') {
-                        deleteVariant(id, element);
+                        deleteBenefit(id, element);
                     } else if (type === 'image') {
                         deleteImage(id, element, path);
                     }
@@ -365,7 +365,7 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        $(element).closest('#single-benefit').remove();
+                        $(element).closest('tr').remove();
                         toastr.success(response.message);
                     } else {
                         toastr.error(response.message);
