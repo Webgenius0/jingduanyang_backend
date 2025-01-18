@@ -130,6 +130,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::post('/prescription/create', 'createPrescription');
 
             Route::get('/upcoming-appointments', 'upcomingAppointments');
+
+            Route::get('/total-appointments', 'totalAppointments');
         });
 
     });

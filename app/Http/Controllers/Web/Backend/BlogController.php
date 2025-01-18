@@ -27,7 +27,7 @@ class BlogController extends Controller
                 })
                 ->addColumn('image', function ($data) {
                     $url = asset($data->image);
-                    $image       = "<img src='$url' width='100' height='100'>";
+                    $image       = "<img src='$url' width='50' height='50'>";
                     return $image;
                 })
                 ->addColumn('blog_category_id', function ($data) {
