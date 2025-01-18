@@ -40,15 +40,27 @@ class DoctorController extends Controller
                     return $data->psychologistInformation->qualification;
                 })
                 ->addColumn('ahpra_registration_number', function ($data) {
+                    if(empty($data->psychologistInformation->ahpra_registration_number)){
+                        return 'N/A';
+                    }
                     return $data->psychologistInformation->ahpra_registration_number;
                 })
                 ->addColumn('experience', function ($data) {
+                    if(empty($data->psychologistInformation->experience)){
+                        return 'N/A';
+                    }
                     return $data->psychologistInformation->experience;
                 })
                 ->addColumn('session_length', function ($data) {
+                    if(empty($data->psychologistInformation->session_length)){
+                        return 'N/A';
+                    }
                     return $data->psychologistInformation->session_length;
                 })
                 ->addColumn('cust_per_session', function ($data) {
+                    if(empty($data->psychologistInformation->cust_per_session)){
+                        return 'N/A';
+                    }
                     return '$' . $data->psychologistInformation->cust_per_session;
                 })
                 ->addColumn('status', function ($data) {
