@@ -132,6 +132,10 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::get('/upcoming-appointments', 'upcomingAppointments');
 
             Route::get('/total-appointments', 'totalAppointments');
+            Route::get('/total-patient', 'totalPatient');
+
+            Route::get('/new-appointments', 'newAppointments');
+            Route::get('/new-clients', 'newClients');
         });
 
     });

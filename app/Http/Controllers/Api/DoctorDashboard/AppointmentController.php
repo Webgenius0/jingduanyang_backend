@@ -245,7 +245,7 @@ class AppointmentController extends Controller
         // Validate relationships between auth user and psychologist information
         $query->whereHas('psychologistInformation', function ($q) use ($user) {
             $q->where('user_id', $user->id);
-        });    
+        });
 
         $data = $query->limit(7)->get();
 
@@ -278,6 +278,119 @@ class AppointmentController extends Controller
         }
 
         return $this->success($data, 'Total Appointment data fetched successfully', 200);
+    }
+
+    public function totalPatient()
+    {
+        $user = auth()->user();
+
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+
+        $query = Appointment::where('status', '!=', 'cancelled')->where('status', 'completed');
+
+        // Validate relationships between auth user and psychologist information
+        $query->whereHas('psychologistInformation', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        });
+
+        $data = $query->count();
+
+        if ($data == null) {
+            return $this->error([], 'Data Not Found', 404);
+        }
+
+        return $this->success($data, 'Total Patient data fetched successfully', 200);
+    }
+
+    public function newAppointments()
+    {
+        $user = auth()->user();
+    
+        // Check if the user is authenticated
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+        
+        
+        // Query for appointments with pending status and valid relationship
+        $baseQuery = Appointment::where('status', 'pending')
+            ->whereHas('psychologistInformation', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            });
+
+        // Total new appointments for the entire period
+        $totalAppointments = $baseQuery->count();
+    
+        // Total new appointments for the current period (e.g., today)
+        $currentPeriodAppointments = (clone $baseQuery)
+            ->whereDate('created_at', now()->toDateString())
+            ->count();
+    
+        // Total new appointments for the previous period (e.g., yesterday)
+        $previousPeriodAppointments = (clone $baseQuery)
+            ->whereDate('created_at', now()->subDay()->toDateString())
+            ->count();
+    
+        // Calculate growth
+        $growth = $currentPeriodAppointments - $previousPeriodAppointments;
+    
+        // Determine growth status
+        $status = $growth > 0 ? 'increase' : ($growth < 0 ? 'decrease' : 'no change');
+    
+        // Prepare response data
+        $data = [
+            'new_appointments' => $totalAppointments,
+            'growth'           => $growth,
+            'status'           => $status
+        ];
+    
+        return $this->success($data, 'New client statistics fetched successfully', 200);
+    }
+    
+    public function newClients()
+    {
+        $user = auth()->user();
+    
+        // Check if the user is authenticated
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+        
+        
+        // Query for appointments with pending status and valid relationship
+        $baseQuery = Appointment::where('status', 'pending')
+            ->whereHas('psychologistInformation', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            });
+
+        $totalClients = $baseQuery->count();
+    
+        // Total new appointments for the current period (e.g., today)
+        $currentPeriodClients = (clone $baseQuery)
+            ->whereDate('created_at', now()->toDateString())
+            ->count();
+    
+        // Total new appointments for the previous period (e.g., yesterday)
+        $previousPeriodClients = (clone $baseQuery)
+            ->whereDate('created_at', now()->subDay()->toDateString())
+            ->count();
+    
+        // Calculate growth
+        $growth = $currentPeriodClients - $previousPeriodClients;
+    
+        // Determine growth status
+        $status = $growth > 0 ? 'increase' : ($growth < 0 ? 'decrease' : 'no change');
+    
+        // Prepare response data
+        $data = [
+            'new_appointments' => $totalClients,
+            'growth'           => $growth,
+            'status'           => $status
+        ];
+    
+        return $this->success($data, 'New client statistics fetched successfully', 200);
     }
 
 }
