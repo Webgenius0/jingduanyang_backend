@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\DoctorDashboard;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AppintmentScheduleUpdate;
 use App\Models\Appointment;
 use App\Models\Medicine;
 use App\Models\Prescription;
@@ -10,6 +11,7 @@ use App\Traits\ApiResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class AppointmentController extends Controller
@@ -18,27 +20,37 @@ class AppointmentController extends Controller
 
     public function getAppointments(Request $request)
     {
+        $user = auth()->user();
+
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
         $query = Appointment::with([
             'user:id,avatar,gender',
-            'psychologistInformation.user'
+            'psychologistInformation.user',
         ]);
-    
+
         // Filter by appointment_date (exact match)
         if ($request->input('appointment_date')) {
             $query->whereDate('appointment_date', Carbon::parse($request->input('appointment_date'))->format('Y-m-d'));
         }
-    
+
         if ($request->input('first_name')) {
             $query->where('first_name', 'like', '%' . $request->input('first_name') . '%');
         }
-    
+
+        // Validate relationships between auth user and psychologist information
+        $query->whereHas('psychologistInformation', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        });
+
         // Get the paginated data
         $data = $query->paginate(10);
-    
+
         if ($data->isEmpty()) {
             return $this->error([], 'Data Not Found', 404);
         }
-    
+
         return $this->success($data, 'Appointment data fetched successfully', 200);
     }
 
@@ -84,6 +96,8 @@ class AppointmentController extends Controller
         $data->note             = $request->note;
         $data->save();
 
+        Mail::to($data->email)->send(new AppintmentScheduleUpdate($data));
+
         return $this->success($data, 'Appointment data updated successfully', 200);
     }
 
@@ -91,11 +105,23 @@ class AppointmentController extends Controller
     {
         $currentDate = now(); // Get the current date
 
-        $data = Appointment::with(['user:id,avatar,gender'])
+        $user = auth()->user();
+
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+
+        $query = Appointment::with(['user:id,avatar,gender'])
             ->where('status', 'pending')
             ->whereNotNull('meting_link')
-            ->whereDate('appointment_date', '=', $currentDate)
-            ->get();
+            ->whereDate('appointment_date', '=', $currentDate);
+
+        // Validate relationships between auth user and psychologist information
+        $query->whereHas('psychologistInformation', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        });
+
+        $data = $query->get();
 
         if ($data->isEmpty()) {
             return $this->error([], 'Data Not Found', 404);
@@ -159,11 +185,17 @@ class AppointmentController extends Controller
             return $this->error($validator->errors(), "Validation Error", 422);
         }
 
+        $user = auth()->user();
+
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+
         try {
             DB::beginTransaction();
 
             $prescription = Prescription::create([
-                'user_id'        => auth()->user()->id,
+                'user_id'        => $user->id,
                 'appointment_id' => $request->appointment_id,
                 'date'           => $request->date,
                 'age'            => $request->age,
@@ -200,16 +232,52 @@ class AppointmentController extends Controller
 
     public function upcomingAppointments()
     {
-        $data = Appointment::with(['user:id,avatar,gender'])
+        $user = auth()->user();
+
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+
+        $query = Appointment::with(['user:id,avatar,gender'])
             ->where('status', 'pending')
-            ->whereDate('appointment_date', '>', now())
-            ->get();
+            ->whereDate('appointment_date', '>', now());
+
+        // Validate relationships between auth user and psychologist information
+        $query->whereHas('psychologistInformation', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        });    
+
+        $data = $query->limit(7)->get();
 
         if ($data->isEmpty()) {
             return $this->error([], 'Data Not Found', 404);
         }
 
         return $this->success($data, 'Upcoming Appointment data fetched successfully', 200);
+    }
+
+    public function totalAppointments()
+    {
+        $user = auth()->user();
+
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+
+        $query = Appointment::where('status', '!=', 'cancelled');
+
+        // Validate relationships between auth user and psychologist information
+        $query->whereHas('psychologistInformation', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        });
+
+        $data = $query->count();
+
+        if ($data == null) {
+            return $this->error([], 'Data Not Found', 404);
+        }
+
+        return $this->success($data, 'Total Appointment data fetched successfully', 200);
     }
 
 }

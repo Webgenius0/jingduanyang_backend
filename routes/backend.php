@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Backend\FaqController;
 use App\Http\Controllers\Web\Backend\BlogController;
 use App\Http\Controllers\Web\Backend\TeamController;
+use App\Http\Controllers\Web\Backend\ClientController;
 use App\Http\Controllers\Web\Backend\CourseController;
+use App\Http\Controllers\Web\Backend\DoctorController;
 use App\Http\Controllers\Web\Backend\ProductController;
 use App\Http\Controllers\Web\Backend\ServiceController;
 use App\Http\Controllers\Web\Backend\Cms\HelpController;
@@ -21,9 +23,17 @@ use App\Http\Controllers\Web\Backend\Cms\ConsultationController;
 
 
 
-
-
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+
+Route::controller(DoctorController::class)->group(function () {
+    Route::get('/admin/doctors/index', 'index')->name('admin.doctors.index');
+    Route::post('/admin/doctors/status/{id}', 'status')->name('admin.doctors.status');
+});
+
+Route::controller(ClientController::class)->group(function () {
+    Route::get('/admin/clients/index', 'index')->name('admin.clients.index');
+});
 
 
 Route::controller(ProductCategoryController::class)->group(function () {
@@ -44,6 +54,7 @@ Route::controller(ProductController::class)->group(function () {
     Route::delete('/products/delete/{id}', 'destroy')->name('admin.products.destroy');
     Route::post('/products/status/{id}','status')->name('admin.products.status');
     Route::post('/products/image/delete/{id}','ImageDelete')->name('admin.products.image.delete');
+    Route::post('/products/benefit/delete/{id}','BenefitDelete')->name('admin.products.benefit.delete');
 });
 
 Route::controller(CourseController::class)->group(function () {
