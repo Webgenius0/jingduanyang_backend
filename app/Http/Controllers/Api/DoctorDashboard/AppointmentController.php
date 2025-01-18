@@ -154,9 +154,21 @@ class AppointmentController extends Controller
 
     public function appointmentSchedule()
     {
-        $data = Appointment::with(['user:id,avatar,gender'])
-            ->where('status', 'pending')
-            ->get();
+
+        $user = auth()->user();
+
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+
+        $query = Appointment::where('status', 'pending');
+        
+        // Validate relationships between auth user and psychologist information
+        $query->whereHas('psychologistInformation', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        });
+
+        $data = $query->get();
 
         if ($data->isEmpty()) {
             return $this->error([], 'Data Not Found', 404);
