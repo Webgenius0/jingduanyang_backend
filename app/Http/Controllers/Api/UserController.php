@@ -138,7 +138,7 @@ class UserController extends Controller
     {
         try {
             // Get the authenticated user
-            $user = auth()->user();
+            $user = auth()->user()->with('psychologistInformation')->first();
 
             // If user is not found, return an error response
             if (!$user) {
