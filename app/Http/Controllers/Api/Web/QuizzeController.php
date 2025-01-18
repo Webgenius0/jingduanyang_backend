@@ -70,6 +70,15 @@ class QuizzeController extends Controller
     }
 
 
+    public function startQuiz()
+    {
+        $user_id = auth()->user()->id;
+
+        $patientTest = PatientAnxietyTest::create(['user_id' => $user_id]);
+        return $this->success($patientTest, 'Quiz started successfully', 200);
+    }
+
+
     public function anxietyTest(Request $request) {
         $question_id = $request->question_id;
         $given_answer = $request->given_answer;
@@ -84,7 +93,10 @@ class QuizzeController extends Controller
         $rightAnswer = $quizQuestion->answer;
     
         if ($rightAnswer == $given_answer) {
-            $patientTest = PatientAnxietyTest::firstOrCreate(['user_id' => $user_id]);
+            $patientTest = PatientAnxietyTest::where('user_id', $user_id)->latest()->first();
+            if (!$patientTest) {
+                return $this->error($patientTest, 'No active quiz found for the user. Please start the quiz first.', 404);
+            }
             $patientTest->score += 1;
             $patientTest->save();
            return $this->success($patientTest->score,'The Answer is Right',200);
@@ -93,24 +105,17 @@ class QuizzeController extends Controller
         return $this->error('The Answer is Wrong',404);
     }
 
-    public function totalScore() {
+
+
+    public function  anxietyTestResult()  {
+        $totalQuestion = QuizzeQuestion::where('status', 'active')->latest()->count();
         $user_id = auth()->user()->id;
-        $patientTest = PatientAnxietyTest::where('user_id', $user_id)->first();
-        if (!$patientTest) {
-            return $this->error([], 'No score found', 404);
-        }
-        return $this->success($patientTest->score, 'Score fetched successfully', 200);
-    }
+        $totalScore = PatientAnxietyTest::where('user_id', $user_id)->latest()->first()->score??0 ;
 
-    public function totalQuestion() {
-
-        $totalQuestion = QuizzeQuestion::where('status', 'active')->count();
-
-        if (!$totalQuestion) {
-            return $this->error([], 'No score found', 404);
-        }
-
-        return $this->success($totalQuestion, 'Score fetched successfully', 200);
+        return $this->success([
+            'total_question' => $totalQuestion,
+            'total_score' => $totalScore
+        ], 'Score fetched successfully', 200);
     }
     
     
