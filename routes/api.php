@@ -135,6 +135,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
             Route::get('/new-appointments', 'newAppointments');
             Route::get('/new-clients', 'newClients');
+
+            Route::get('/gender-chart', 'genderChart');
         });
 
     });
