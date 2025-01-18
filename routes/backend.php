@@ -20,11 +20,14 @@ use App\Http\Controllers\Web\Backend\QuizzeQuestionController;
 use App\Http\Controllers\Web\Backend\Cms\WhyChooseUsController;
 use App\Http\Controllers\Web\Backend\ProductCategoryController;
 use App\Http\Controllers\Web\Backend\Cms\ConsultationController;
-
-
+use App\Http\Controllers\Web\Backend\InactiveDoctorController;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
+Route::controller(InactiveDoctorController::class)->group(function () {
+    Route::get('/admin/inactive-doctors/index', 'index')->name('admin.inactive-doctors.index');
+    Route::post('/admin/inactive-doctors/status/{id}', 'status')->name('admin.inactive-doctors.status');
+});
 
 Route::controller(DoctorController::class)->group(function () {
     Route::get('/admin/doctors/index', 'index')->name('admin.doctors.index');

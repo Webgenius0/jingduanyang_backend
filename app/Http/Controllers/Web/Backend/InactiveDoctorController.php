@@ -1,15 +1,16 @@
 <?php
+
 namespace App\Http\Controllers\Web\Backend;
 
-use App\Http\Controllers\Controller;
-use App\Mail\DoctorAccountActive;
-use App\Models\PsychologistInformation;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Mail\DoctorAccountActive;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use App\Models\PsychologistInformation;
 use Yajra\DataTables\Facades\DataTables;
 
-class DoctorController extends Controller
+class InactiveDoctorController extends Controller
 {
     public function index(Request $request)
     {
@@ -17,10 +18,10 @@ class DoctorController extends Controller
             $query = User::where('role', 'doctor');
 
             $query->whereHas('psychologistInformation', function ($q) {
-                $q->where('status', 'active');
+                $q->where('status', 'inactive');
             });
             $data = $query->with(['psychologistInformation' => function ($q) {
-                $q->where('status', 'active');
+                $q->where('status', 'inactive');
             }])->get();
             if (! empty($request->input('search.value'))) {
                 $searchTerm = $request->input('search.value');
@@ -85,7 +86,7 @@ class DoctorController extends Controller
                 ->make();
         }
 
-        return view('backend.layouts.doctor.index');
+        return view('backend.layouts.inactiveDoctor.index');
     }
 
     public function status($id)
@@ -120,5 +121,4 @@ class DoctorController extends Controller
             ]);
         }
     }
-
 }
