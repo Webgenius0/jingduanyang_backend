@@ -34,6 +34,9 @@ class DoctorController extends Controller
                     return $data->first_name . ' ' . $data->last_name;
                 })
                 ->addColumn('qualification', function ($data) {
+                    if(empty($data->psychologistInformation->qualification)){
+                        return 'N/A';
+                    }
                     return $data->psychologistInformation->qualification;
                 })
                 ->addColumn('ahpra_registration_number', function ($data) {

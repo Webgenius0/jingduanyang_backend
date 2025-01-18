@@ -16,7 +16,6 @@ use App\Http\Controllers\Api\Web\HomePageController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Web\DynamicPageController;
 use App\Http\Controllers\Api\Web\SystemSettingController;
-use App\Http\Controllers\Web\Backend\DashboardController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\Api\ClientDashboard\DashboradController;
 use App\Http\Controllers\Api\DoctorDashboard\AppointmentController;
