@@ -81,8 +81,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::controller(QuizzeController::class)->group(function () {
         Route::get('/quizzes/{id}', 'getQuizzes');
         Route::get('/anxiety-test', 'anxietyTest');
-        Route::get('/total-score', 'totalScore');
-        Route::get('/total-question', 'totalQuestion');
+        Route::get('start-quiz', 'startQuiz');
+        Route::get('anxiety-test-result', 'anxietyTestResult');
     });
 
     //Client Dashboard
@@ -181,3 +181,6 @@ Route::controller(ProductController::class)->group(function () {
 Route::controller(QuizzeController::class)->group(function () {
     Route::get('/quizzes-category', 'getQuizzesCategory');
 });
+
+
+
