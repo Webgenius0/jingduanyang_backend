@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone');
             $table->integer('age')->nullable();
+            $table->enum('gender', ['male', 'female', 'other'])->nullable();
             $table->string('consultant_type');
             $table->date('appointment_date');
             $table->string('appointment_time');

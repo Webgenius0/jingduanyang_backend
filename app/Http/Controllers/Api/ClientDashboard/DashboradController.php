@@ -11,6 +11,12 @@ class DashboradController extends Controller
     use ApiResponse;
     public function doctorList()
     {
+        $user = auth()->user();
+
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+        
         $doctors = User::with('PsychologistInformation')->where('role', 'doctor')->get();
 
         if ($doctors->isEmpty()) {

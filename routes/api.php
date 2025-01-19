@@ -16,7 +16,6 @@ use App\Http\Controllers\Api\Web\HomePageController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Web\DynamicPageController;
 use App\Http\Controllers\Api\Web\SystemSettingController;
-use App\Http\Controllers\Web\Backend\DashboardController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\Api\ClientDashboard\DashboradController;
 use App\Http\Controllers\Api\DoctorDashboard\AppointmentController;
@@ -133,6 +132,12 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::get('/upcoming-appointments', 'upcomingAppointments');
 
             Route::get('/total-appointments', 'totalAppointments');
+            Route::get('/total-patient', 'totalPatient');
+
+            Route::get('/new-appointments', 'newAppointments');
+            Route::get('/new-clients', 'newClients');
+
+            Route::get('/gender-chart', 'genderChart');
         });
 
     });

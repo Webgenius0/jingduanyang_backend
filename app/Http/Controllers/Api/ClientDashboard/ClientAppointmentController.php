@@ -82,6 +82,12 @@ class ClientAppointmentController extends Controller
 
     public function getClientPrescription($id)
     {
+        $user = auth()->user();
+
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+        
         $data = Prescription::with('medicines','tests','user')->where('user_id', $id)->first();
 
         if (!$data) {
