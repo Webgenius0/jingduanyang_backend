@@ -209,9 +209,14 @@ Route::controller(QuizzeController::class)->group(function () {
     Route::get('/quizzes-category', 'getQuizzesCategory');
 });
 
-Route::prefix('paypal')->group(function () {
-    Route::post('/create-plan', [PayPalController::class, 'createPlan']);
-    Route::post('/activate-plan', [PayPalController::class, 'activatePlan']);
-    Route::post('/create-subscription', [PayPalController::class, 'createSubscription']);
-    Route::get('/execute-subscription/{subscription_id}', [PayPalController::class, 'executeSubscription']);
+
+
+Route::controller(PayPalController::class)->prefix('paypal')->group(function () {
+    Route::post('/create-product', 'createProduct'); // Create a product
+    Route::get('/list-products', 'listProducts');   // List existing products
+    Route::post('/create-plan', 'createPlan');      // Create a subscription plan
+    Route::post('/activate-plan', 'activatePlan');  // Activate a plan
+    Route::post('/create-subscription', 'createSubscription'); // Create a subscription
+    Route::get('/execute-subscription/{subscription_id}', 'executeSubscription'); // Execute a subscription
 });
+

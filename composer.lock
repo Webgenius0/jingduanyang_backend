@@ -6677,16 +6677,16 @@
         },
         {
             "name": "yajra/laravel-datatables-buttons",
-            "version": "v11.2.1",
+            "version": "v11.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables-buttons.git",
-                "reference": "53f1aea1a099f2f40a0def5601b28db6b68cfa93"
+                "reference": "78c84636f4bb56efb149f694b67784ed651cf0ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables-buttons/zipball/53f1aea1a099f2f40a0def5601b28db6b68cfa93",
-                "reference": "53f1aea1a099f2f40a0def5601b28db6b68cfa93",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables-buttons/zipball/78c84636f4bb56efb149f694b67784ed651cf0ad",
+                "reference": "78c84636f4bb56efb149f694b67784ed651cf0ad",
                 "shasum": ""
             },
             "require": {
@@ -6745,7 +6745,7 @@
             ],
             "support": {
                 "issues": "https://github.com/yajra/laravel-datatables-buttons/issues",
-                "source": "https://github.com/yajra/laravel-datatables-buttons/tree/v11.2.1"
+                "source": "https://github.com/yajra/laravel-datatables-buttons/tree/v11.2.2"
             },
             "funding": [
                 {
@@ -6753,7 +6753,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-14T08:35:10+00:00"
+            "time": "2025-01-18T11:12:52+00:00"
         },
         {
             "name": "yajra/laravel-datatables-editor",
