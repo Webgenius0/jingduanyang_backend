@@ -21,6 +21,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\Api\ClientDashboard\DashboradController;
 use App\Http\Controllers\Api\DoctorDashboard\AppointmentController;
 use App\Http\Controllers\Api\ClientDashboard\ClientAppointmentController;
+use App\Http\Controllers\Api\PayPal\PayPalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -203,5 +204,9 @@ Route::controller(QuizzeController::class)->group(function () {
     Route::get('/quizzes-category', 'getQuizzesCategory');
 });
 
-
-
+Route::prefix('paypal')->group(function () {
+    Route::post('/create-plan', [PayPalController::class, 'createPlan']);
+    Route::post('/activate-plan', [PayPalController::class, 'activatePlan']);
+    Route::post('/create-subscription', [PayPalController::class, 'createSubscription']);
+    Route::get('/execute-subscription/{subscription_id}', [PayPalController::class, 'executeSubscription']);
+});
