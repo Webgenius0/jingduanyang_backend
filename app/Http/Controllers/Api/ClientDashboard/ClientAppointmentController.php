@@ -84,7 +84,7 @@ class ClientAppointmentController extends Controller
     {
         $user = auth()->user();
 
-        if (! $user) {
+        if (!$user) {
             return $this->error([], 'Unauthorized access', 401);
         }
         

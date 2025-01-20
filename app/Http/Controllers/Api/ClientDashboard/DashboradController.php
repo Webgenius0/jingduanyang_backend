@@ -5,6 +5,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\User;
 use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class DashboradController extends Controller
 {
@@ -16,7 +19,7 @@ class DashboradController extends Controller
         if (! $user) {
             return $this->error([], 'Unauthorized access', 401);
         }
-        
+
         $doctors = User::with('PsychologistInformation')->where('role', 'doctor')->get();
 
         if ($doctors->isEmpty()) {
@@ -38,7 +41,7 @@ class DashboradController extends Controller
         if (! $user) {
             return $this->error([], 'Unauthorized access', 401);
         }
-        
+
         $data = Appointment::with(['psychologistInformation.user:id,first_name,last_name,avatar'])->select('appointments.user_id', 'appointments.psychologist_information_id', 'appointments.appointment_date')
             ->where('user_id', $user->id)
             ->where('appointment_date', '<', now()) // Assuming `appointment_date` exists
@@ -62,7 +65,7 @@ class DashboradController extends Controller
         $data = Appointment::with(['psychologistInformation.user:id,first_name,last_name,avatar'])
             ->where('user_id', $user->id)
             ->where('status', 'accept')
-            // ->where('appointment_date', '>=', now())
+        // ->where('appointment_date', '>=', now())
             ->limit(2)
             ->get();
 
@@ -71,6 +74,78 @@ class DashboradController extends Controller
         }
 
         return $this->success($data, 'Active appointments fetched successfully', 200);
+    }
+
+    public function userData()
+    {
+        $user = Auth::user();
+
+        if (! $user) {
+            return $this->error([], "User Not Found", 404);
+        }
+
+        return $this->success($user, 'User data fetched successfully', 200);
+    }
+
+    public function profileUpdate(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            'first_name' => 'required|string',
+            'last_name'  => 'required|string',
+            'phone'      => 'required|string',
+            'email'      => 'required|string',
+            'gender'     => 'required|string',
+            'birthdate'  => 'required|string',
+            'languages'  => 'required|string',
+            'avatar'     => 'nullable|image|mimes:jpeg,png,jpg,svg|max:5120',
+        ]);
+
+        // Return validation errors
+        if ($validator->fails()) {
+            return $this->error($validator->errors(), "Validation Error", 422);
+        }
+
+        try {
+            // Get authenticated user
+            $user = Auth::user();
+
+            if (! $user) {
+                return $this->error([], "User Not Found", 404);
+            }
+
+            if ($request->hasFile('avatar')) {
+
+                if ($user->avatar) {
+                    $previousImagePath = public_path($user->avatar);
+                    if (file_exists($previousImagePath)) {
+                        unlink($previousImagePath);
+                    }
+                }
+
+                $image     = $request->file('avatar');
+                $imageName = uploadImage($image, 'User/Avatar');
+            } else {
+                $imageName = $user->avatar;
+            }
+
+            // Update user details
+            $user->update([
+                'first_name' => $request->first_name,
+                'last_name'  => $request->last_name,
+                'phone'      => $request->phone,
+                'email'      => $request->email,
+                'gender'     => $request->gender,
+                'birthdate'  => $request->birthdate,
+                'languages'  => $request->languages,
+                'avatar'     => $imageName,
+            ]);
+
+            return $this->success($user, 'User updated successfully', 200);
+        } catch (\Exception $e) {
+            return $this->error([], [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
 }
