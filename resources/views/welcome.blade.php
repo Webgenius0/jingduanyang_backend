@@ -125,7 +125,7 @@
 </head>
 
 <body class="w-screen h-screen bg-blue-500 flex justify-center items-center text-center">
-    <div class="Box">
+    <!-- <div class="Box">
         <h1 class="text-6xl font-bold text-white">Welcome To The Admin Dashboard.</h1>
         <p class="text-md mt-4 text-white">
             <a href="https://github.com/rhishi-kesh" class="hover:underline link" target="_blank">
@@ -141,7 +141,7 @@
                 <span class="author">Jingduanyang Bhowmik💕</span>
             </a>
         </p>
-    </div>
+    </div> -->
     <div>
         @if (Route::has('login'))
             @auth
