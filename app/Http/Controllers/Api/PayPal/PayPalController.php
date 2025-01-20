@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\PayPal;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class PayPalController extends Controller
@@ -17,9 +17,14 @@ class PayPalController extends Controller
         $this->provider->setApiCredentials(config('paypal'));
     }
 
-
+    // Create a product
     public function createProduct(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:1000',
+        ]);
+
         try {
             $this->provider->getAccessToken();
 
@@ -32,10 +37,12 @@ class PayPalController extends Controller
 
             return response()->json(['product' => $product], 201);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error('Product creation failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to create product.', 'message' => $e->getMessage()], 500);
         }
     }
 
+    // List all products
     public function listProducts()
     {
         try {
@@ -45,14 +52,16 @@ class PayPalController extends Controller
 
             return response()->json(['products' => $products], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error('Failed to retrieve products', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to list products.', 'message' => $e->getMessage()], 500);
         }
     }
 
-
-
+    // Create a plan
     public function createPlan(Request $request)
     {
+
+
         try {
             $this->provider->getAccessToken();
 
@@ -90,70 +99,48 @@ class PayPalController extends Controller
 
             return response()->json(['plan' => $plan], 201);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error('Plan creation failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to create plan.', 'message' => $e->getMessage()], 500);
         }
     }
 
-     // Activate a plan
-     public function activatePlan(Request $request)
-     {
-         try {
-             $this->provider->getAccessToken();
-             $this->provider->activatePlan($request->plan_id);
- 
-             return response()->json(['message' => 'Plan activated successfully.'], 200);
-         } catch (\Exception $e) {
-             return response()->json(['error' => $e->getMessage()], 500);
-         }
-     }
- 
-     // Create a subscription
-     public function createSubscription(Request $request)
-     {
-         try {
-             $this->provider->getAccessToken();
- 
-             $subscription = $this->provider->createSubscription([
-                 'plan_id' => $request->plan_id,
-                 'subscriber' => [
-                     'name' => [
-                         'given_name' => $request->first_name,
-                         'surname' => $request->last_name,
-                     ],
-                     'email_address' => $request->email,
-                 ],
-                 'application_context' => [
-                     'brand_name' => 'Your Brand Name',
-                     'locale' => 'en-US',
-                     'user_action' => 'SUBSCRIBE_NOW',
-                     'payment_method' => [
-                         'payer_selected' => 'PAYPAL',
-                         'payee_preferred' => 'IMMEDIATE_PAYMENT_REQUIRED',
-                     ],
-                 ],
-             ]);
- 
-             return response()->json(['subscription' => $subscription], 201);
-         } catch (\Exception $e) {
-             return response()->json(['error' => $e->getMessage()], 500);
-         }
-     }
- 
-     // Execute a subscription
-     public function executeSubscription($subscription_id)
-     {
-         try {
-             $this->provider->getAccessToken();
-     
-             $subscription = $this->provider->showSubscriptionDetails($subscription_id); 
-     
-             return response()->json(['message' => 'Subscription details retrieved successfully.', 'subscription' => $subscription], 200);
-         } catch (\Exception $e) {
-             return response()->json(['error' => 'Failed to retrieve subscription details.', 'message' => $e->getMessage()], 500);
-         }
-     }
-     
-     
-     
 
+
+    // Create a subscription
+    public function createSubscription(Request $request)
+    {
+        $request->validate([
+            'plan_id' => 'required|string',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+        ]);
+
+        try {
+            $this->provider->getAccessToken();
+
+            $subscription = $this->provider->createSubscription([
+                'plan_id' => $request->plan_id,
+                'subscriber' => [
+                    'name' => [
+                        'given_name' => $request->first_name,
+                        'surname' => $request->last_name,
+                    ],
+                    'email_address' => $request->email,
+                ],
+                'application_context' => [
+                    'brand_name' => 'Your Brand Name',
+                    'locale' => 'en-US',
+                    'user_action' => 'SUBSCRIBE_NOW',
+                ],
+            ]);
+
+            return response()->json(['subscription' => $subscription], 201);
+        } catch (\Exception $e) {
+            Log::error('Subscription creation failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to create subscription.', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+ 
 }
