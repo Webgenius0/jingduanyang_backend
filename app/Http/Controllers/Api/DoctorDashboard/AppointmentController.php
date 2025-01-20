@@ -26,7 +26,7 @@ class AppointmentController extends Controller
             return $this->error([], 'Unauthorized access', 401);
         }
         $query = Appointment::with([
-            'user:id,avatar,gender',
+            'user:id,avatar',
             'psychologistInformation.user',
         ]);
 
@@ -154,7 +154,6 @@ class AppointmentController extends Controller
 
     public function appointmentSchedule()
     {
-
         $user = auth()->user();
 
         if (! $user) {
@@ -162,7 +161,7 @@ class AppointmentController extends Controller
         }
 
         $query = Appointment::where('status', 'pending');
-        
+
         // Validate relationships between auth user and psychologist information
         $query->whereHas('psychologistInformation', function ($q) use ($user) {
             $q->where('user_id', $user->id);
@@ -176,11 +175,17 @@ class AppointmentController extends Controller
 
         // Group appointments by date and count
         $groupedData = $data->groupBy('appointment_date')
-            ->map(function ($appointments) {
-                return $appointments->count();
-            });
+        ->map(function ($appointments, $date) {
+            // Convert date to Carbon instance to ensure we can use format()
+            $formattedDate = Carbon::parse($date)->format('Y-m-d');
+            
+            return [
+                'appointmentCount' => (string) $appointments->count(), // Ensure appointment count is a string
+                'date' => $formattedDate, // Format date to 'YYYY-MM-DD'
+            ];
+        });
 
-        return $this->success($groupedData, 'Appointment data fetched successfully', 200);
+        return $this->success($groupedData->values(), 'Appointment data fetched successfully', 200);
     }
 
     public function createPrescription(Request $request)
@@ -250,7 +255,8 @@ class AppointmentController extends Controller
             return $this->error([], 'Unauthorized access', 401);
         }
 
-        $query = Appointment::with(['user:id,avatar,gender'])
+        $query = Appointment::with(['user:id,avatar'])
+            ->selectRaw('*, DATE_FORMAT(appointment_date, "%b %d, %Y") as appointment_date')
             ->where('status', 'pending')
             ->whereDate('appointment_date', '>', now());
 

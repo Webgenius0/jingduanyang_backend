@@ -22,23 +22,27 @@ use App\Http\Controllers\Web\Backend\ProductCategoryController;
 use App\Http\Controllers\Web\Backend\Cms\ConsultationController;
 use App\Http\Controllers\Web\Backend\InactiveDoctorController;
 
+//Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
+//Inactive Doctor Route
 Route::controller(InactiveDoctorController::class)->group(function () {
     Route::get('/admin/inactive-doctors/index', 'index')->name('admin.inactive-doctors.index');
     Route::post('/admin/inactive-doctors/status/{id}', 'status')->name('admin.inactive-doctors.status');
 });
 
+//Doctor Route
 Route::controller(DoctorController::class)->group(function () {
     Route::get('/admin/doctors/index', 'index')->name('admin.doctors.index');
     Route::post('/admin/doctors/status/{id}', 'status')->name('admin.doctors.status');
 });
 
+//Client Route
 Route::controller(ClientController::class)->group(function () {
     Route::get('/admin/clients/index', 'index')->name('admin.clients.index');
 });
 
-
+//Product Category Route
 Route::controller(ProductCategoryController::class)->group(function () {
     Route::get('/product-categories',  'index')->name('admin.product_categories.index');
     Route::post('/product-categories', 'store')->name('admin.product_categories.store');
@@ -48,6 +52,7 @@ Route::controller(ProductCategoryController::class)->group(function () {
     Route::post('/product-categories/status/{id}','status')->name('admin.product_categories.status');
 });
 
+//Product Route
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products', 'index')->name('admin.products.index');
     Route::get('/products/create', 'create')->name('admin.products.create');
@@ -60,6 +65,7 @@ Route::controller(ProductController::class)->group(function () {
     Route::post('/products/benefit/delete/{id}','BenefitDelete')->name('admin.products.benefit.delete');
 });
 
+//Course Route
 Route::controller(CourseController::class)->group(function () {
     Route::get('/courses', 'index')->name('admin.courses.index');
     Route::get('/courses/create', 'create')->name('admin.courses.create');

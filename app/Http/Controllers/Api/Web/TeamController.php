@@ -34,15 +34,13 @@ class TeamController extends Controller
 
     public function teamDetail($id)
     {
-        
+
         $user = User::with('psychologistInformation')->find($id);
 
-    
         if (empty($user)) {
             return $this->error([], 'Data Not Found', 404);
         }
 
-       
         if (! empty($user->psychologistInformation)) {
             $user->psychologistInformation->increment('views');
         }
@@ -60,7 +58,7 @@ class TeamController extends Controller
             'age'              => 'required|numeric|max:100',
             'gender'           => 'required|string',
             'consultant_type'  => 'required|string',
-            'appointment_date' => 'required',
+            'appointment_date' => 'required|date',
             'appointment_time' => 'required',
             'message'          => 'required|string',
         ]);
@@ -71,25 +69,33 @@ class TeamController extends Controller
 
         $user = auth()->user();
 
-        // dd($user);
-
         if (! $user) {
             return $this->error([], 'User Not Found', 404);
         }
 
+        // Check if the user already has an existing appointment
+        $existingAppointment = Appointment::where('user_id', $user->id)
+            ->where('appointment_date', $request->appointment_date)
+            ->where('appointment_time', $request->appointment_time)
+            ->first();
+
+        if ($existingAppointment) {
+            return $this->error([], 'You already have an appointment scheduled at this date and time.', 400);
+        }
+
         $data = Appointment::create([
-            'user_id'          => $user->id,
+            'user_id'                     => $user->id,
             'psychologist_information_id' => $request->psychologist_information_id,
-            'first_name'       => $request->first_name,
-            'last_name'        => $request->last_name,
-            'email'            => $request->email,
-            'phone'            => $request->phone,
-            'age'              => $request->age,
-            'gender'           => $request->gender,
-            'consultant_type'  => $request->consultant_type,
-            'appointment_date' => $request->appointment_date,
-            'appointment_time' => $request->appointment_time,
-            'message'          => $request->message,
+            'first_name'                  => $request->first_name,
+            'last_name'                   => $request->last_name,
+            'email'                       => $request->email,
+            'phone'                       => $request->phone,
+            'age'                         => $request->age,
+            'gender'                      => $request->gender,
+            'consultant_type'             => $request->consultant_type,
+            'appointment_date'            => $request->appointment_date,
+            'appointment_time'            => $request->appointment_time,
+            'message'                     => $request->message,
         ]);
 
         if (! $data) {

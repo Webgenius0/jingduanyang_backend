@@ -16,7 +16,6 @@ use App\Http\Controllers\Api\Web\HomePageController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Web\DynamicPageController;
 use App\Http\Controllers\Api\Web\SystemSettingController;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\Api\ClientDashboard\DashboradController;
 use App\Http\Controllers\Api\DoctorDashboard\AppointmentController;
 use App\Http\Controllers\Api\ClientDashboard\ClientAppointmentController;
@@ -100,7 +99,6 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::get('/client-appointments', 'getAppointments');
             // Route::get('/appointment-detail/{id}', 'appointmentDetail');
             Route::get('/client-appointment-meeting', 'appointmentMeeting');
-
             Route::get('/doctor', 'getDoctor');
             Route::get('/client-prescription/{id}', 'getClientPrescription');
         });
@@ -109,6 +107,9 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::get('/doctor-list', 'doctorList');
             Route::get('/previous-appointments ', 'previousAppointments');
             Route::get('/active-appointments', 'activeAppointments');
+
+            Route::get('/client-data', 'userData');
+            Route::post('/client-data/update', 'profileUpdate');
         });
 
     });
@@ -118,8 +119,11 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
         Route::controller(UserController::class)->prefix('users')->group(function () {
             Route::post('/logout', 'logoutUser');
+            Route::get('/data', 'userData');
+            Route::post('/data/update', 'profileUpdate');
         });
 
+        //Appointments Route 
         Route::controller(AppointmentController::class)->group(function () {
             Route::get('/appointments', 'getAppointments');
             Route::get('/appointment-detail/{id}', 'appointmentDetail');
@@ -210,7 +214,7 @@ Route::controller(QuizzeController::class)->group(function () {
 });
 
 
-
+//PayPal subscription payments routes 
 Route::controller(PayPalController::class)->prefix('paypal')->group(function () {
     Route::post('/create-product', 'createProduct'); 
     Route::get('/list-products', 'listProducts');   
