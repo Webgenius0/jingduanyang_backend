@@ -107,8 +107,8 @@ class QuizzeController extends Controller
 
 
 
-    public function  anxietyTestResult()  {
-        $totalQuestion = QuizzeQuestion::where('status', 'active')->latest()->count();
+    public function  anxietyTestResult(Request $request)  {
+        $totalQuestion = QuizzeQuestion::where('status', 'active')->where('quizze_category_id',$request->category_id)->latest()->count();
         $user_id = auth()->user()->id;
         $totalScore = PatientAnxietyTest::where('user_id', $user_id)->latest()->first()->score??0 ;
 
