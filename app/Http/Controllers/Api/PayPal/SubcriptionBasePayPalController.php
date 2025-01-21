@@ -145,15 +145,24 @@ class SubcriptionBasePayPalController extends Controller
         }
     }
 
-    public function checkSubscriptionPaymentCompletedOrNot(Request $request) {
-       
-        $this->provider->getAccessToken();
-        $response = $this->provider->showSubscriptionDetails($request->subscription_id);
+    public function checkSubscriptionPaymentCompletedOrNot(Request $request)
+    {
 
+        Log::info('Webhook received', ['request' => $request->all()]);
+
+        $subscriber = $request->input('resource.subscriber');
+
+       
+
+        if ($subscriber && isset($subscriber['email_address'])) {
+            $email = $subscriber['email_address'];
+            Log::info('Subscriber Email:', ['email' => $email]);
+        } else {
+            Log::warning('No email found in webhook payload.');
+        }
     
-        return response()->json([
-            'data' => $request->all(),
-        ]);
+        
     }
+    
  
 }
