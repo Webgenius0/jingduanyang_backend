@@ -282,7 +282,7 @@ class AppointmentController extends Controller
             return $this->error([], 'Unauthorized access', 401);
         }
 
-        $query = Appointment::where('status', '!=', 'cancelled');
+        $query = Appointment::where('status', 'completed');
 
         // Validate relationships between auth user and psychologist information
         $query->whereHas('psychologistInformation', function ($q) use ($user) {
@@ -306,7 +306,7 @@ class AppointmentController extends Controller
             return $this->error([], 'Unauthorized access', 401);
         }
 
-        $query = Appointment::where('status', '!=', 'cancelled')->where('status', 'completed');
+        $query = Appointment::where('status', 'completed');
 
         // Validate relationships between auth user and psychologist information
         $query->whereHas('psychologistInformation', function ($q) use ($user) {
