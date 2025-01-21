@@ -19,7 +19,8 @@ use App\Http\Controllers\Api\Web\SystemSettingController;
 use App\Http\Controllers\Api\ClientDashboard\DashboradController;
 use App\Http\Controllers\Api\DoctorDashboard\AppointmentController;
 use App\Http\Controllers\Api\ClientDashboard\ClientAppointmentController;
-use App\Http\Controllers\Api\PayPal\PayPalController;
+use App\Http\Controllers\Api\PayPal\PaymentController;
+use App\Http\Controllers\Api\PayPal\SubcriptionBasePayPalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -215,7 +216,7 @@ Route::controller(QuizzeController::class)->group(function () {
 
 
 //PayPal subscription payments routes 
-Route::controller(PayPalController::class)->prefix('paypal')->group(function () {
+Route::controller(SubcriptionBasePayPalController::class)->prefix('paypal')->group(function () {
     Route::post('/create-product', 'createProduct'); 
     Route::get('/list-products', 'listProducts');   
     Route::post('/create-plan', 'createPlan');   
@@ -223,5 +224,13 @@ Route::controller(PayPalController::class)->prefix('paypal')->group(function () 
     Route::post('/create-subscription', 'createSubscription'); 
     Route::post('/activate-subscription', 'executeSubscription'); 
 
+    Route::get('/webhook', 'checkSubscriptionPaymentCompletedOrNot');
+
 });
 
+//PayPal payments routes
+Route::controller(PaymentController::class)->prefix('paypal')->group(function () {
+    Route::post('/create-transaction', 'createTransaction');
+    Route::post('/process-transaction', 'processTransaction');
+    Route::post('/success-transaction', 'successTransaction');
+});
