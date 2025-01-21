@@ -154,7 +154,8 @@ class SubcriptionBasePayPalController extends Controller
     
         $subscriber = $request->input('resource.subscriber');
         $plan_id = $request->input('resource.plan_id');
-    
+        Log::info($plan_id);
+        
         if (!$plan_id || !$subscriber || !isset($subscriber['email_address'])) {
             Log::warning('Invalid webhook payload: Missing plan_id or subscriber email.');
             return response()->json(['message' => 'Invalid payload'], 400);
