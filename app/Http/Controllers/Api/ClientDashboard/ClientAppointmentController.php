@@ -31,7 +31,9 @@ class ClientAppointmentController extends Controller
         }
     
         if ($request->input('first_name')) {
-            $query->where('first_name', 'like', '%' . $request->input('first_name') . '%');
+            $query->whereHas('psychologistInformation.user', function ($q) use ($request) {
+                $q->where('first_name', 'like', '%' . $request->input('first_name') . '%');
+            });
         }
     
         // Get the paginated data
