@@ -1,15 +1,16 @@
 <?php
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Models\PsychologistInformation;
 use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\PsychologistInformation;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -356,6 +357,42 @@ class UserController extends Controller
             return $this->error([], [
                 'error' => $e->getMessage(),
             ]);
+        }
+    }
+
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
+        ]);
+
+        // Return validation errors
+        if ($validator->fails()) {
+            return $this->error($validator->errors(), "Validation Error", 422);
+        }
+
+        try {
+            // Get the authenticated user
+            $user = auth()->user();
+
+            // Check if the old password is correct
+            if (!Hash::check($request->input('old_password'), $user->password)) {
+                return $this->error([], 'Old password is incorrect', 422);
+            }
+
+            // Update the user's password
+            $user->password = Hash::make($request->input('password'));
+            $user->save();
+
+            return $this->success([], 'Password changed successfully', '200');
+        } catch (\Exception $e) {
+            return $this->error([], $e->getMessage(), 500);
         }
     }
 }

@@ -1,12 +1,13 @@
 <?php
 namespace App\Http\Controllers\Api\ClientDashboard;
 
-use App\Http\Controllers\Controller;
-use App\Models\Appointment;
 use App\Models\User;
+use App\Models\Appointment;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class DashboradController extends Controller
@@ -181,6 +182,42 @@ class DashboradController extends Controller
             return $this->error([], [
                 'error' => $e->getMessage(),
             ]);
+        }
+    }
+
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
+        ]);
+
+        // Return validation errors
+        if ($validator->fails()) {
+            return $this->error($validator->errors(), "Validation Error", 422);
+        }
+
+        try {
+            // Get the authenticated user
+            $user = auth()->user();
+
+            // Check if the old password is correct
+            if (!Hash::check($request->input('old_password'), $user->password)) {
+                return $this->error([], 'Old password is incorrect', 422);
+            }
+
+            // Update the user's password
+            $user->password = Hash::make($request->input('password'));
+            $user->save();
+
+            return $this->success([], 'Password changed successfully', '200');
+        } catch (\Exception $e) {
+            return $this->error([], $e->getMessage(), 500);
         }
     }
 

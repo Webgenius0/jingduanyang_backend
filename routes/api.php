@@ -98,10 +98,13 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
         Route::controller(ClientAppointmentController::class)->group(function () {
             Route::get('/client-appointments', 'getAppointments');
-            // Route::get('/appointment-detail/{id}', 'appointmentDetail');
             Route::get('/client-appointment-meeting', 'appointmentMeeting');
             Route::get('/doctor', 'getDoctor');
             Route::get('/client-prescription/{id}', 'getClientPrescription');
+
+            Route::get('/client-appointment-schedule', 'clientAppointmentSchedule');
+
+            Route::post('/make-appointment/{id}', 'makeAppointments');
         });
 
         Route::controller(DashboradController::class)->group(function () {
@@ -112,6 +115,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
             Route::get('/client-data', 'userData');
             Route::post('/client-data/update', 'profileUpdate');
+
+            Route::post('/password-change','changePassword');
         });
 
     });
@@ -123,6 +128,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::post('/logout', 'logoutUser');
             Route::get('/data', 'userData');
             Route::post('/data/update', 'profileUpdate');
+            Route::post('/password-update','changePassword');
         });
 
         //Appointments Route 
