@@ -108,6 +108,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::get('/doctor-list', 'doctorList');
             Route::get('/previous-appointments ', 'previousAppointments');
             Route::get('/active-appointments', 'activeAppointments');
+            Route::get('/upcoming-chackup', 'upcomingChackup');
 
             Route::get('/client-data', 'userData');
             Route::post('/client-data/update', 'profileUpdate');

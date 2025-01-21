@@ -23,7 +23,7 @@ class DashboradController extends Controller
         $doctors = User::with('PsychologistInformation')->where('role', 'doctor')->get();
 
         if ($doctors->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($doctors, 'Doctor data fetched successfully', 200);
@@ -34,7 +34,7 @@ class DashboradController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function previousAppointments()
+    public function previousAppointments(Request $request)
     {
         $user = auth()->user();
 
@@ -42,13 +42,31 @@ class DashboradController extends Controller
             return $this->error([], 'Unauthorized access', 401);
         }
 
-        $data = Appointment::with(['psychologistInformation.user:id,first_name,last_name,avatar'])->select('appointments.user_id', 'appointments.psychologist_information_id', 'appointments.appointment_date')
+        $query = Appointment::with(['psychologistInformation.user:id,first_name,last_name,avatar'])
+            ->select('appointments.user_id', 'appointments.psychologist_information_id', 'appointments.appointment_date')
             ->where('user_id', $user->id)
-            ->where('appointment_date', '<', now()) // Assuming `appointment_date` exists
-            ->get();
+            ->where('appointment_date', '<', now());
+
+        // Filter by year
+        if ($request->has('year')) {
+            $query->whereYear('appointment_date', $request->year);
+        }
+
+        // Filter by month
+        if ($request->has('month')) {
+            $query->whereMonth('appointment_date', $request->month);
+        }
+
+        // Filter by week
+        if ($request->has('week')) {
+            $query->whereWeek('appointment_date', $request->week);
+        }
+        
+
+        $data = $query->get();
 
         if ($data->isEmpty()) {
-            return $this->error([], 'No previous appointments found', 404);
+            return $this->success([], 'previous appointments is empty', 200);
         }
 
         return $this->success($data, 'Previous appointments fetched successfully', 200);
@@ -65,15 +83,35 @@ class DashboradController extends Controller
         $data = Appointment::with(['psychologistInformation.user:id,first_name,last_name,avatar'])
             ->where('user_id', $user->id)
             ->where('status', 'accept')
-        // ->where('appointment_date', '>=', now())
+            ->where('appointment_date', '>=', now())
             ->limit(2)
             ->get();
 
         if ($data->isEmpty()) {
-            return $this->error([], 'No active appointments found', 404);
+            return $this->success([], 'No active appointments found', 200);
         }
 
         return $this->success($data, 'Active appointments fetched successfully', 200);
+    }
+
+    public function upcomingChackup()
+    {
+        $user = auth()->user();
+
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+
+        $data = Appointment::where('user_id', $user->id)->select(['appointment_date', 'status'])
+            ->where('status', 'accept')
+            ->where('appointment_date', '>', now())
+            ->get();
+
+        if ($data->isEmpty()) {
+            return $this->success([], 'No upcoming checkups found', 200);
+        }
+
+        return $this->success($data, 'Upcoming checkups fetched successfully', 200);
     }
 
     public function userData()
