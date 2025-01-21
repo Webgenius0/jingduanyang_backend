@@ -58,8 +58,8 @@ class DashboradController extends Controller
         }
 
         // Filter by week
-        if ($request->has('day')) {
-            $query->whereDate('appointment_date', $request->day);
+        if ($request->has('week')) {
+            $query->whereWeek('appointment_date', $request->week);
         }
         
 

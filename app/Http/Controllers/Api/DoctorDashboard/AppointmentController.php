@@ -428,7 +428,7 @@ class AppointmentController extends Controller
 
         // Check if data exists
         if ($genderCounts->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         // Prepare the response data
