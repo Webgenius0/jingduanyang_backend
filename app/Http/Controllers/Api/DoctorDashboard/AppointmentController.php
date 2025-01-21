@@ -48,7 +48,7 @@ class AppointmentController extends Controller
         $data = $query->paginate(10);
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Appointment data fetched successfully', 200);
@@ -61,7 +61,7 @@ class AppointmentController extends Controller
             ->first();
 
         if (! $data) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Appointment data fetched successfully', 200);
@@ -124,7 +124,7 @@ class AppointmentController extends Controller
         $data = $query->get();
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Appointment data fetched successfully', 200);
@@ -170,7 +170,7 @@ class AppointmentController extends Controller
         $data = $query->get();
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         // Group appointments by date and count
@@ -268,7 +268,7 @@ class AppointmentController extends Controller
         $data = $query->limit(7)->get();
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Upcoming Appointment data fetched successfully', 200);
@@ -292,7 +292,7 @@ class AppointmentController extends Controller
         $data = $query->count();
 
         if ($data == null) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Total Appointment data fetched successfully', 200);
@@ -316,7 +316,7 @@ class AppointmentController extends Controller
         $data = $query->count();
 
         if ($data == null) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Patient Count Not Found', 200);
         }
 
         return $this->success($data, 'Total Patient data fetched successfully', 200);
