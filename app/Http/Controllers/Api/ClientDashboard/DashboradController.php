@@ -47,26 +47,24 @@ class DashboradController extends Controller
             ->where('user_id', $user->id)
             ->where('appointment_date', '<', now());
 
-        // Filter by year
-        if ($request->has('year')) {
-            $query->whereYear('appointment_date', $request->year);
-        }
+        $current_year = date('Y');
+        $current_month = date('m');
+        $current_week = date('W');
 
-        // Filter by month
-        if ($request->has('month')) {
-            $query->whereMonth('appointment_date', $request->month);
+        if($request->has('type') == 'year') {
+           $query->whereYear('appointment_date', $current_year);
         }
-
-        // Filter by week
-        if ($request->has('week')) {
-            $query->whereWeek('appointment_date', $request->week);
+        elseif($request->has('type') == 'month') {
+           $query->whereMonth('appointment_date', $current_month);
         }
-        
+        else{
+            $query->whereBetween('appointment_date', $current_week);
+        }
 
         $data = $query->get();
-
+ 
         if ($data->isEmpty()) {
-            return $this->success([], 'previous appointments is empty', 200);
+            return $this->success([], 'Previous appointments are empty', 200);
         }
 
         return $this->success($data, 'Previous appointments fetched successfully', 200);
