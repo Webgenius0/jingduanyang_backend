@@ -20,11 +20,14 @@ class AppointmentController extends Controller
 
     public function getAppointments(Request $request)
     {
+        
         $user = auth()->user();
 
         if (! $user) {
             return $this->error([], 'Unauthorized access', 401);
         }
+        $limit = $request->limit ?? 10;
+
         $query = Appointment::with([
             'user:id,avatar',
             'psychologistInformation.user',
@@ -45,7 +48,7 @@ class AppointmentController extends Controller
         });
 
         // Get the paginated data
-        $data = $query->paginate(10);
+        $data = $query->paginate($limit);
 
         if ($data->isEmpty()) {
             return $this->success([], 'Data Not Found', 200);
