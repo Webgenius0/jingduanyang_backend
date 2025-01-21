@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api\PayPal;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
-class PayPalController extends Controller
+class SubcriptionBasePayPalController extends Controller
 {
     protected $provider;
 
@@ -135,6 +137,7 @@ class PayPalController extends Controller
                 ],
             ]);
 
+         
             return response()->json(['subscription' => $subscription], 201);
         } catch (\Exception $e) {
             Log::error('Subscription creation failed', ['error' => $e->getMessage()]);
@@ -142,5 +145,13 @@ class PayPalController extends Controller
         }
     }
 
+    public function checkSubscriptionPaymentCompletedOrNot(Request $request) {
+       
+       
+        
+        return response()->json([
+            'data' => $request->all(),
+        ]);
+    }
  
 }
