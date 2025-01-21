@@ -115,6 +115,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
             Route::get('/client-data', 'userData');
             Route::post('/client-data/update', 'profileUpdate');
+
+            Route::post('/password-change','changePassword');
         });
 
     });
@@ -126,6 +128,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::post('/logout', 'logoutUser');
             Route::get('/data', 'userData');
             Route::post('/data/update', 'profileUpdate');
+            Route::post('/password-update','changePassword');
         });
 
         //Appointments Route 
