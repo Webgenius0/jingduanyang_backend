@@ -27,9 +27,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'client','doctor'])->default('client');
-            $table->enum('user_type', ['basic', 'premium','vip'])->default('normal');
+            $table->enum('user_type', ['basic', 'premium','vip'])->default('basic');
             $table->string('avatar')->nullable();
-            $table->boolean('agree_to_terms')->default(false); // Field to store agreement to terms
+            $table->boolean('agree_to_terms')->default(false); 
             $table->boolean('verified_registered')->default(false);
             $table->rememberToken();
             $table->timestamps();
