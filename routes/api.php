@@ -225,7 +225,7 @@ Route::controller(SubcriptionBasePayPalController::class)->prefix('paypal')->gro
     Route::post('/create-subscription', 'createSubscription'); 
     Route::post('/activate-subscription', 'executeSubscription'); 
 
-    Route::get('/webhook', 'checkSubscriptionPaymentCompletedOrNot');
+    Route::any('/webhook', 'checkSubscriptionPaymentCompletedOrNot');
 
 });
 
