@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\PaypalProduct;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -30,5 +31,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductBenefitsSeeder::class);
         $this->call(QuizzeCategoriesSeeder::class);
         $this->call(QuizzeQuestionsSeeder::class);
+        $this->call(PaypalProductSeeder::class);
     }
 }
