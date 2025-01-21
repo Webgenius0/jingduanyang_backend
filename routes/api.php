@@ -217,11 +217,12 @@ Route::controller(QuizzeController::class)->group(function () {
 
 //PayPal subscription payments routes 
 Route::controller(PayPalController::class)->prefix('paypal')->group(function () {
-    Route::post('/create-product', 'createProduct'); // Create a product
-    Route::get('/list-products', 'listProducts');   // List existing products
-    Route::post('/create-plan', 'createPlan');      // Create a subscription plan
-    Route::post('/activate-plan', 'activatePlan');  // Activate a plan
-    Route::post('/create-subscription', 'createSubscription'); // Create a subscription
-    Route::get('/execute-subscription/{subscription_id}', 'executeSubscription'); // Execute a subscription
+    Route::post('/create-product', 'createProduct'); 
+    Route::get('/list-products', 'listProducts');   
+    Route::post('/create-plan', 'createPlan');   
+    Route::post('/activate-plan', 'activatePlan');  
+    Route::post('/create-subscription', 'createSubscription'); 
+    Route::post('/activate-subscription', 'executeSubscription'); 
+
 });
 
