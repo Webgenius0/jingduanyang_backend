@@ -30,6 +30,7 @@ class ResetController extends Controller
      */
     public function composer(): JsonResponse {
         // Execute the composer update command
+       try{
         $output = [];
         $resultCode = 0;
 
@@ -43,7 +44,10 @@ class ResetController extends Controller
         } else {
             return $this->error($output, 'Failed to run composer update', 500);
         }
+       }catch (\Exception $e) {
+        return $this->error([], 'Failed to run composer update', 500);
     }
+}
 
     /**
      * Reset Database and Optimize Clear

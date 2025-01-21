@@ -147,8 +147,10 @@ class SubcriptionBasePayPalController extends Controller
 
     public function checkSubscriptionPaymentCompletedOrNot(Request $request) {
        
-       
-        
+        $this->provider->getAccessToken();
+        $response = $this->provider->showSubscriptionDetails($request->subscription_id);
+
+    
         return response()->json([
             'data' => $request->all(),
         ]);
