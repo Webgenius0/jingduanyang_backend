@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Api\PayPal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\PaypalProduct;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
+use Srmklive\PayPal\Facades\PayPal;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class SubcriptionBasePayPalController extends Controller
@@ -147,22 +150,51 @@ class SubcriptionBasePayPalController extends Controller
 
     public function checkSubscriptionPaymentCompletedOrNot(Request $request)
     {
-
         Log::info('Webhook received', ['request' => $request->all()]);
-
+    
         $subscriber = $request->input('resource.subscriber');
-
-       
-
-        if ($subscriber && isset($subscriber['email_address'])) {
-            $email = $subscriber['email_address'];
-            Log::info('Subscriber Email:', ['email' => $email]);
-        } else {
-            Log::warning('No email found in webhook payload.');
+        $plan_id = $request->input('resource.plan_id');
+    
+        if (!$plan_id || !$subscriber || !isset($subscriber['email_address'])) {
+            Log::warning('Invalid webhook payload: Missing plan_id or subscriber email.');
+            return response()->json(['message' => 'Invalid payload'], 400);
         }
     
-        
+        $email = $subscriber['email_address'];
+    
+        $paypalProduct = PaypalProduct::where('plan_id', $plan_id)->first();
+    
+        if (!$paypalProduct) {
+            Log::warning('Invalid plan ID received.', ['plan_id' => $plan_id]);
+            return response()->json(['message' => 'Plan ID not found'], 404);
+        }
+    
+        $plan_type = $paypalProduct->name;
+    
+        $user_type = match ($plan_type) {
+            'Basic Plan' => 'basic',
+            'Premium Plan' => 'premium',
+            'VIP Plan' => 'vip',
+            default => null
+        };
+    
+        if (!$user_type) {
+            Log::warning('Invalid plan type received.', ['plan_type' => $plan_type]);
+            return response()->json(['message' => 'Invalid plan type'], 400);
+        }
+    
+        $user = User::where('email', $email)->first();
+    
+        if ($user) {
+            $user->update(['user_type' => $user_type]);
+            Log::info('User updated successfully.', ['email' => $email, 'user_type' => $user_type]);
+            return response()->json(['message' => 'User type updated successfully'], 200);
+        } else {
+            Log::warning('User not found for the provided email.', ['email' => $email]);
+            return response()->json(['message' => 'User not found'], 404);
+        }
     }
+    
     
  
 }
