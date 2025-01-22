@@ -149,6 +149,7 @@ class ClientAppointmentController extends Controller
             'phone'            => 'required|numeric',
             'age'              => 'required|numeric|max:100',
             'gender'           => 'required|string',
+            'appointment_date' => 'required|date',
             'consultant_type'  => 'required|string',
             'appointment_date' => 'required|date',
         ]);
@@ -173,6 +174,7 @@ class ClientAppointmentController extends Controller
             'phone' => $request->phone,
             'age' => $request->age,
             'gender' => $request->gender,
+            'appointment_date' => $request->appointment_date,
             'consultant_type' => $request->consultant_type,
             'appointment_date' => $request->appointment_date,
             'user_id' => $user->id,
