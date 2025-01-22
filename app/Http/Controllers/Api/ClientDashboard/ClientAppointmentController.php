@@ -40,7 +40,7 @@ class ClientAppointmentController extends Controller
         $data = $query->paginate(10);
     
         if ($data->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
     
         return $this->success($data, 'Appointment data fetched successfully', 200);
@@ -100,7 +100,7 @@ class ClientAppointmentController extends Controller
             ->paginate(10);
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Appointment data fetched successfully', 200);
@@ -117,7 +117,7 @@ class ClientAppointmentController extends Controller
         $data = Prescription::with('user.psychologistInformation')->select('prescriptions.user_id','prescriptions.appointment_id')->where('appointment_id', $user->id)->get();
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Prescription data fetched successfully', 200);
@@ -134,7 +134,7 @@ class ClientAppointmentController extends Controller
         $data = Prescription::with('medicines','tests','user')->where('user_id', $id)->first();
 
         if (!$data) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }    
 
         return $this->success($data, 'Prescription data fetched successfully', 200);
@@ -182,7 +182,7 @@ class ClientAppointmentController extends Controller
         ]);
 
         if (!$data) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Prescription data fetched successfully', 200);
