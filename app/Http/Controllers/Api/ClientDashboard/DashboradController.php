@@ -118,7 +118,7 @@ class DashboradController extends Controller
         $user = Auth::user();
 
         if (! $user) {
-            return $this->error([], "User Not Found", 404);
+            return $this->success([], "User Not Found", 200);
         }
 
         return $this->success($user, 'User data fetched successfully', 200);
