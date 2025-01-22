@@ -289,7 +289,7 @@ class UserController extends Controller
         }
     }
 
-    public function user()
+    public function doctorData()
     {
         $user = Auth::user();
 
@@ -300,7 +300,7 @@ class UserController extends Controller
         return $this->success($user, 'User data fetched successfully', 200);
     }
 
-    public function profileUpdate(Request $request)
+    public function doctorProfileUpdate(Request $request)
     {
         $validator = Validator::make(request()->all(), [
             'first_name' => 'required|string',

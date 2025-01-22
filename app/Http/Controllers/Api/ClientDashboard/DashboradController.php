@@ -113,7 +113,7 @@ class DashboradController extends Controller
         return $this->success($data, 'Upcoming checkups fetched successfully', 200);
     }
 
-    public function userData()
+    public function clientData()
     {
         $user = Auth::user();
 
@@ -124,7 +124,7 @@ class DashboradController extends Controller
         return $this->success($user, 'User data fetched successfully', 200);
     }
 
-    public function profileUpdate(Request $request)
+    public function clientProfileUpdate(Request $request)
     {
         $validator = Validator::make(request()->all(), [
             'first_name' => 'required|string',
