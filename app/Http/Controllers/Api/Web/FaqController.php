@@ -18,7 +18,7 @@ class FaqController extends Controller
         $data = FAQ::where('status','active') ->take(5)->get();
 
         if (!$data) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->error([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Faq data fetched successfully', 200);

@@ -27,7 +27,7 @@ class ServiceController extends Controller
         $data = Service::where('status','active')->paginate($limit);
 
         if (!$data) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Services fetched successfully', 200);
@@ -39,7 +39,7 @@ class ServiceController extends Controller
 
         if (empty($service)) {
             
-            return $this->error([], 'Service Not Found', 404);
+            return $this->success([], 'Service Not Found', 200);
         }
 
         return $this->success($service, 'Service fetched successfully', 200);
@@ -52,7 +52,7 @@ class ServiceController extends Controller
             $cms[$key] = (clone $query)->where('section_name', $key)->latest()->take($section['item'])->{$section['type']}();
         }
         if ($cms == null) {
-            return $this->error([], 'Why Choose Us Content not found', 200);
+            return $this->success([], 'Why Choose Us Content not found', 200);
         }
         return $this->success($cms, 'Why Choose Us Content fetch Successful!', 200);
     }

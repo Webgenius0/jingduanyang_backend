@@ -18,7 +18,7 @@ class DynamicPageController extends Controller
         $data = DynamicPage::where('status', 'active')->get();
 
         if (!$data) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->error([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Page fetched successfully', 200);
@@ -29,7 +29,7 @@ class DynamicPageController extends Controller
         $data = DynamicPage::find($id);
 
         if (empty($data)) {
-            return $this->error([], 'Page Not Found', 404);
+            return $this->error([], 'Page Not Found', 200);
         }
 
         return $this->success($data, 'Page fetched successfully', 200);

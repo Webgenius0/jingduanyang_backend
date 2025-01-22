@@ -257,6 +257,7 @@ class UserController extends Controller
                     'location'                  => $request->location,
                     'description'               => $request->description,
                     'aphra_certificate'         => $certificatePath ?? $psychologistInfo->aphra_certificate,
+                    'status'                    => 'active',
                 ]);
             } else {
                 // Create new psychologist information

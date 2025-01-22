@@ -17,7 +17,7 @@ class SystemSettingController extends Controller
         $data = SystemSetting::all();
 
         if (!$data) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'System Setting data fetched successfully', 200);
@@ -28,7 +28,7 @@ class SystemSettingController extends Controller
         $data = SocialMedia::all();
 
         if (!$data) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Social Media data fetched successfully', 200);

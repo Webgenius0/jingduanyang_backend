@@ -21,7 +21,7 @@ class ProductController extends Controller
         $data = Product::with(['images'])->where('status','active')->paginate($limit);
 
         if (!$data) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Product data fetched successfully', 200);
@@ -32,7 +32,7 @@ class ProductController extends Controller
         $product = Product::with(['images','benefits'])->find($id);
 
         if (empty($product)) {
-            return $this->error([], 'Product Not Found', 404);
+            return $this->success([], 'Product Not Found', 200);
         }
 
         return $this->success($product, 'Product data fetched successfully', 200);
