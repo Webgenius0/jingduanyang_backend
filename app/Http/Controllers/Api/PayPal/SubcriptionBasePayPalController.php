@@ -114,31 +114,12 @@ class SubcriptionBasePayPalController extends Controller
     // Create a subscription
     public function createSubscription(Request $request)
     {
-        $request->validate([
-            'plan_id' => 'required|string',
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-        ]);
-
+      
+       
         try {
             $this->provider->getAccessToken();
 
-            $subscription = $this->provider->createSubscription([
-                'plan_id' => $request->plan_id,
-                'subscriber' => [
-                    'name' => [
-                        'given_name' => $request->first_name,
-                        'surname' => $request->last_name,
-                    ],
-                    'email_address' => $request->email,
-                ],
-                'application_context' => [
-                    'brand_name' => 'Your Brand Name',
-                    'locale' => 'en-US',
-                    'user_action' => 'SUBSCRIBE_NOW',
-                ],
-            ]);
+            $subscription = $this->provider->createSubscription($request->all());
 
          
             return response()->json(['subscription' => $subscription], 201);
@@ -147,21 +128,22 @@ class SubcriptionBasePayPalController extends Controller
             return response()->json(['error' => 'Failed to create subscription.', 'message' => $e->getMessage()], 500);
         }
     }
+    
 
     public function checkSubscriptionPaymentCompletedOrNot(Request $request)
     {
         Log::info('Webhook received', ['request' => $request->all()]);
     
         $subscriber = $request->input('resource.subscriber');
+        $email = $subscriber['email_address'] ?? null;
         $plan_id = $request->input('resource.plan_id');
-        Log::info($plan_id);
-        
-        if (!$plan_id || !$subscriber || !isset($subscriber['email_address'])) {
-            Log::warning('Invalid webhook payload: Missing plan_id or subscriber email.');
-            return response()->json(['message' => 'Invalid payload'], 400);
-        }
     
-        $email = $subscriber['email_address'];
+        Log::info('Extracted Data', ['email' => $email, 'plan_id' => $plan_id]);
+    
+        if (!$email || !$plan_id) {
+            Log::warning('Missing email or plan_id in webhook data.', ['email' => $email, 'plan_id' => $plan_id]);
+            return response()->json(['message' => 'Invalid data received'], 400);
+        }
     
         $paypalProduct = PaypalProduct::where('plan_id', $plan_id)->first();
     
@@ -176,7 +158,6 @@ class SubcriptionBasePayPalController extends Controller
             'Basic Plan' => 'basic',
             'Premium Plan' => 'premium',
             'VIP Plan' => 'vip',
-            default => null
         };
     
         if (!$user_type) {
