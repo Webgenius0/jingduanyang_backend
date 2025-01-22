@@ -44,6 +44,7 @@ class PaymentController extends Controller
         }
     }
 
+   
     public function checkOrderPayment(Request $request)
 {
    
@@ -55,18 +56,7 @@ class PaymentController extends Controller
         return response()->json(['error' => 'User not found'], 404);
     }
     
-    // log everything one by one
-    Log::info('User found', ['user_id' => $user->id]);
-    Log::info('Order ID', ['order_id' => $request->input('resource.id')]);
-    Log::info('Amount', ['amount' => $request->input('resource.purchase_units.0.amount.value')]);
-    Log::info('Currency', ['currency' => $request->input('resource.purchase_units.0.amount.currency_code')]);
-    Log::info('Payment Method', ['payment_method' => 'PayPal']);
-    Log::info('Status', ['status' => 'approved']);
-    // now log all item
 
-    foreach ($request->input('resource.purchase_units.0.items', []) as $item) {
-        Log::info($item);
-    }
 
     $order = Order::create([
         'user_id' => $user->id,
@@ -74,7 +64,7 @@ class PaymentController extends Controller
         'amount' => $request->input('resource.purchase_units.0.amount.value'),
         'currency' => $request->input('resource.purchase_units.0.amount.currency_code'),
         'payment_method' => 'PayPal', 
-        'status' => 'approved',  
+        'status' => 'pending',  
     ]);
 
     Log::info('Order created successfully', ['order_id' => $order->id]);
@@ -91,31 +81,9 @@ class PaymentController extends Controller
       
         ]);
         
-        // Log product information for debugging
-        Log::info('Product added', [
-            'order_id' => $order->id,
-            'product_sku' => $item['sku'],
-            'product_name' => $item['name'],
-            'quantity' => $item['quantity']
-        ]);
+  
     }
 
-    // Shipping information logging for debugging
-    $shippingInfo = $request->input('resource.purchase_units.0.shipping');
-    Log::info('Shipping Info', ['shipping' => $shippingInfo]);
-
-    // If you want to store shipping info as well, you can implement that here:
-    // Example: Create a Shipping model entry (if needed)
-    // Shipping::create([
-    //     'order_id' => $order->id,
-    //     'full_name' => $shippingInfo['name']['full_name'],
-    //     'address' => json_encode($shippingInfo['address']),
-    // ]);
-
-    // Log successful order processing
-    Log::info('Order and products created successfully', ['order_id' => $order->id]);
-
-    // Return a success response
     return response()->json(['message' => 'Order processed successfully'], 201);
 }
 
