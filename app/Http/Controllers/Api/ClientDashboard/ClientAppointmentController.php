@@ -151,7 +151,7 @@ class ClientAppointmentController extends Controller
             'gender'           => 'required|string',
             'appointment_date' => 'required|date',
             'consultant_type'  => 'required|string',
-            'appointment_date' => 'required|date',
+            'appointment_time' => 'required',
         ]);
 
         $psychologist_information = PsychologistInformation::where('user_id', $id)->first();
@@ -176,7 +176,7 @@ class ClientAppointmentController extends Controller
             'gender' => $request->gender,
             'appointment_date' => $request->appointment_date,
             'consultant_type' => $request->consultant_type,
-            'appointment_date' => $request->appointment_date,
+            'appointment_time' => $request->appointment_time,
             'user_id' => $user->id,
             'psychologist_information_id' => $psychologist_information->id,
         ]);
