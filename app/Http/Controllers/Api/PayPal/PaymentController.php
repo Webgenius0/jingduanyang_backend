@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api\PayPal;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\OrderPuduct;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
@@ -41,13 +44,43 @@ class PaymentController extends Controller
         }
     }
 
-    public function checkOrderPayment(Request $request) {
-
-    //    Log::info('Check Order Payment', ['request' => $request->all()]);
-       $items = $request->items;
-       $email = $items->email;
-       Log::info('Check Order Payment', ['email' => $email, 'items' => $items]);
-
+    public function checkOrderPayment(Request $request)
+    {
+        Log::info('Check Order Payment', ['request' => $request->all()]);
+    
+        $email = $request->input('resource.purchase_units.0.custom_id');
+    
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            Log::error('User not found', ['email' => $email]);
+            return response()->json(['error' => 'User not found'], 404);
+        }
+    
+        $order = Order::create([
+            'user_id' => $user->id,
+            'order_id' => $request->input('resource.id'),
+            'amount' => $request->input('resource.purchase_units.0.amount.value'),
+            'currency' => $request->input('resource.purchase_units.0.amount.currency_code'),
+            'payment_method' => 'PayPal',
+            'payment_create_time' => $request->input('resource.create_time'),
+            'status' => 'pending',
+        ]);
+    
+        foreach ($request->input('resource.purchase_units.0.items', []) as $item) {
+            OrderPuduct::create([
+                'order_id' => $order->id, 
+                'product_id' => $item['sku'],
+                'name' => $item['name'],
+                'quantity' => $item['quantity'],
+                'price' => $item['unit_amount']['value'],
+                'currency' => $item['unit_amount']['currency_code'],
+            ]);
+        }
+    
+        Log::info('Order and products created successfully', ['order_id' => $order->id]);
+    
+        return response()->json(['message' => 'Order processed successfully'], 201);
     }
+    
 
 }

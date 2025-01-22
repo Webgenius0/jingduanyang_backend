@@ -75,4 +75,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(PsychologistInformation::class);
     }
+
+    public function order()  {
+        return $this->hasMany(Order::class);
+    }
 }
