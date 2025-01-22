@@ -126,8 +126,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
         Route::controller(UserController::class)->prefix('users')->group(function () {
             Route::post('/logout', 'logoutUser');
-            Route::get('/data', 'userData');
-            Route::post('/data/update', 'profileUpdate');
+            Route::get('/doctor/data', 'userData');
+            Route::post('/doctor/data/update', 'profileUpdate');
             Route::post('/password-update','changePassword');
         });
 
