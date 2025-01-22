@@ -46,10 +46,7 @@ class PaymentController extends Controller
 
     public function checkOrderPayment(Request $request)
 {
-    // Log the incoming request for debugging
-    Log::info('Check Order Payment', ['request' => $request->all()]);
-
-    // Extract the custom_id (email) from the request
+   
     $email = $request->input('resource.purchase_units.0.custom_id');
     
     $user = User::where('email', $email)->first();
@@ -58,6 +55,24 @@ class PaymentController extends Controller
         return response()->json(['error' => 'User not found'], 404);
     }
     
+    // log everything one by one
+    Log::info('User found', ['user_id' => $user->id]);
+    Log::info('Order ID', ['order_id' => $request->input('resource.id')]);
+    Log::info('Amount', ['amount' => $request->input('resource.purchase_units.0.amount.value')]);
+    Log::info('Currency', ['currency' => $request->input('resource.purchase_units.0.amount.currency_code')]);
+    Log::info('Payment Method', ['payment_method' => 'PayPal']);
+    Log::info('Status', ['status' => 'approved']);
+    // now log all item
+    foreach ($request->input('resource.purchase_units.0.items', []) as $item) {
+        Log::info('Product', [
+            'product_sku' => $item['sku'],
+            'product_name' => $item['name'],
+            'quantity' => $item['quantity'],
+            'price' => $item['unit_amount']['value'],
+            'currency' => $item['unit_amount']['    `'],
+            'description' => $item['description'],
+        ]);
+    }
 
     $order = Order::create([
         'user_id' => $user->id,
