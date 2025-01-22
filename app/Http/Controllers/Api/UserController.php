@@ -28,7 +28,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         if (! $user) {
-            return $this->error([], 'User Not Found', 404);
+            return $this->error([], 'User Not Found', 200);
         }
 
         return $this->success($user, 'User data fetched successfully', 200);
@@ -289,18 +289,18 @@ class UserController extends Controller
         }
     }
 
-    public function user()
+    public function doctorData()
     {
         $user = Auth::user();
 
         if (! $user) {
-            return $this->error([], "User Not Found", 404);
+            return $this->success([], "User Not Found", 200);
         }
 
         return $this->success($user, 'User data fetched successfully', 200);
     }
 
-    public function profileUpdate(Request $request)
+    public function doctorProfileUpdate(Request $request)
     {
         $validator = Validator::make(request()->all(), [
             'first_name' => 'required|string',

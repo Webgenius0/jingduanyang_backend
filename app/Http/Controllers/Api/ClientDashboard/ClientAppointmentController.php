@@ -40,7 +40,7 @@ class ClientAppointmentController extends Controller
         $data = $query->paginate(10);
     
         if ($data->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
     
         return $this->success($data, 'Appointment data fetched successfully', 200);
@@ -100,7 +100,7 @@ class ClientAppointmentController extends Controller
             ->paginate(10);
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Appointment data fetched successfully', 200);
@@ -117,7 +117,7 @@ class ClientAppointmentController extends Controller
         $data = Prescription::with('user.psychologistInformation')->select('prescriptions.user_id','prescriptions.appointment_id')->where('appointment_id', $user->id)->get();
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Prescription data fetched successfully', 200);
@@ -134,7 +134,7 @@ class ClientAppointmentController extends Controller
         $data = Prescription::with('medicines','tests','user')->where('user_id', $id)->first();
 
         if (!$data) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }    
 
         return $this->success($data, 'Prescription data fetched successfully', 200);
@@ -149,8 +149,9 @@ class ClientAppointmentController extends Controller
             'phone'            => 'required|numeric',
             'age'              => 'required|numeric|max:100',
             'gender'           => 'required|string',
-            'consultant_type'  => 'required|string',
             'appointment_date' => 'required|date',
+            'consultant_type'  => 'required|string',
+            'appointment_time' => 'required',
         ]);
 
         $psychologist_information = PsychologistInformation::where('user_id', $id)->first();
@@ -173,14 +174,15 @@ class ClientAppointmentController extends Controller
             'phone' => $request->phone,
             'age' => $request->age,
             'gender' => $request->gender,
-            'consultant_type' => $request->consultant_type,
             'appointment_date' => $request->appointment_date,
+            'consultant_type' => $request->consultant_type,
+            'appointment_time' => $request->appointment_time,
             'user_id' => $user->id,
             'psychologist_information_id' => $psychologist_information->id,
         ]);
 
         if (!$data) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Prescription data fetched successfully', 200);
