@@ -22,7 +22,7 @@ class BlogController extends Controller
         $data = Blog::where('status','active')->paginate($limit);
 
         if (!$data) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->error([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Blog data fetched successfully', 200);
@@ -33,7 +33,7 @@ class BlogController extends Controller
         $blog = Blog::find($id);
 
         if (empty($blog)) {
-            return $this->error([], 'Blog Not Found', 404);
+            return $this->error([], 'Blog Not Found', 200);
         }
 
         return $this->success($blog, 'Blog data fetched successfully', 200);
@@ -49,7 +49,7 @@ class BlogController extends Controller
 
         if(!$data)
         {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->error([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Related Blog data fetched successfully', 200);

@@ -26,7 +26,7 @@ class TeamController extends Controller
             ->paginate($limit);
 
         if ($data->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Doctor fetched successfully', 200);
@@ -38,7 +38,7 @@ class TeamController extends Controller
         $user = User::with('psychologistInformation')->find($id);
 
         if (empty($user)) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         if (! empty($user->psychologistInformation)) {
@@ -69,7 +69,7 @@ class TeamController extends Controller
 
         $user = auth()->user();
 
-        if (! $user) {
+        if (!$user) {
             return $this->error([], 'User Not Found', 404);
         }
 
@@ -98,7 +98,7 @@ class TeamController extends Controller
             'message'                     => $request->message,
         ]);
 
-        if (! $data) {
+        if (!$data) {
             return $this->error([], 'Data Not Found', 404);
         }
 

@@ -22,7 +22,7 @@ class QuizzeController extends Controller
         $data = QuizzeCategory::where('status','active')->paginate($limit);
 
         if (!$data) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Quizzes Category data fetched successfully', 200);
@@ -35,7 +35,7 @@ class QuizzeController extends Controller
             ->get();
     
         if ($data->isEmpty()) {
-            return $this->error([], 'Data Not Found', 404);
+            return $this->success([], 'Data Not Found', 200);
         }
     
         // Shuffle options for each question
