@@ -63,15 +63,9 @@ class PaymentController extends Controller
     Log::info('Payment Method', ['payment_method' => 'PayPal']);
     Log::info('Status', ['status' => 'approved']);
     // now log all item
+
     foreach ($request->input('resource.purchase_units.0.items', []) as $item) {
-        Log::info('Product', [
-            'product_sku' => $item['sku'],
-            'product_name' => $item['name'],
-            'quantity' => $item['quantity'],
-            'price' => $item['unit_amount']['value'],
-            'currency' => $item['unit_amount']['    `'],
-            'description' => $item['description'],
-        ]);
+        Log::info($item);
     }
 
     $order = Order::create([
