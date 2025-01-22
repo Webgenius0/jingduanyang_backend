@@ -250,7 +250,7 @@ class AppointmentController extends Controller
         }
     }
 
-    public function upcomingAppointments()
+    public function upcomingAppointments(Request $request)
     {
         $user = auth()->user();
 
@@ -268,7 +268,7 @@ class AppointmentController extends Controller
             $q->where('user_id', $user->id);
         });
 
-        $data = $query->limit(7)->get();
+        $data = $query->paginate($request->limit ?? 7);
 
         if ($data->isEmpty()) {
             return $this->success([], 'Data Not Found', 200);
