@@ -237,7 +237,5 @@ Route::controller(SubcriptionBasePayPalController::class)->prefix('paypal')->gro
 
 //PayPal payments routes
 Route::controller(PaymentController::class)->prefix('paypal')->group(function () {
-    Route::post('/create-transaction', 'createTransaction');
-    Route::post('/process-transaction', 'processTransaction');
-    Route::post('/success-transaction', 'successTransaction');
+    Route::post('/create-order', 'createPayPalOrder');
 });
