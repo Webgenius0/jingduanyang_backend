@@ -52,40 +52,34 @@ class PaymentController extends Controller
     // Extract the custom_id (email) from the request
     $email = $request->input('resource.purchase_units.0.custom_id');
     
-    // Find the user based on the email
     $user = User::where('email', $email)->first();
     if (!$user) {
         Log::error('User not found', ['email' => $email]);
         return response()->json(['error' => 'User not found'], 404);
     }
+    
 
-    // Create a new order entry based on the data received
     $order = Order::create([
         'user_id' => $user->id,
         'order_id' => $request->input('resource.id'),
         'amount' => $request->input('resource.purchase_units.0.amount.value'),
         'currency' => $request->input('resource.purchase_units.0.amount.currency_code'),
-        'payment_method' => 'PayPal',  // As the payment method is PayPal
-        'payment_create_time' => $request->input('resource.create_time'),
-        'status' => 'approved',  // The status is approved as per the event
+        'payment_method' => 'PayPal', 
+        'status' => 'approved',  
     ]);
 
-    // Log the created order ID
     Log::info('Order created successfully', ['order_id' => $order->id]);
 
-    // Loop through the items in the purchase unit and create entries for them
     foreach ($request->input('resource.purchase_units.0.items', []) as $item) {
-        // Check if all necessary fields are available
         OrderPuduct::create([
-            'order_id' => $order->id,  // Associate the product with the order
-            'product_id' => $item['sku'],  // SKU as the product identifier
-            'name' => $item['name'],  // Product name
-            'quantity' => $item['quantity'],  // Quantity of the product
-            'price' => $item['unit_amount']['value'],  // Unit price of the product
-            'currency' => $item['unit_amount']['currency_code'],  // Currency code
-            'description' => $item['description'],  // Description of the product
-            'image_url' => $item['image_url'],  // Product image URL
-            'url' => $item['url'],  // URL for the item
+            'order_id' => $order->id,  
+            'product_id' => $item['sku'], 
+            'name' => $item['name'],  
+            'quantity' => $item['quantity'],  
+            'price' => $item['unit_amount']['value'],  
+            'currency' => $item['unit_amount']['currency_code'], 
+            'description' => $item['description'],  
+      
         ]);
         
         // Log product information for debugging

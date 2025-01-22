@@ -20,7 +20,6 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->string('currency');
             $table->string('payment_method');
-            $table->timestamp('payment_create_time');
             $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
             $table->timestamps();
         });

@@ -18,10 +18,10 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
             $table->string('product_id');
             $table->string('name');
-            $table->integer('quantity');
-            $table->decimal('price', 10, 2);
+            $table->string('quantity');
+            $table->string('price');
             $table->string('currency');
-            $table->string('payment_method');
+            $table->string('description');
             $table->timestamps();
         });
     }
