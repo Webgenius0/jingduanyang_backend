@@ -28,4 +28,21 @@ class PaymentController extends Controller
             return response()->json(['error' => 'Failed to create order.', 'message' => $e->getMessage()], 500);
         }
     }
+
+    public function captureOrder($orderId) {
+        try {
+            $this->provider->getAccessToken();
+            $capture = $this->provider->capturePaymentOrder($orderId);
+
+            return response()->json(['capture' => $capture], 200);
+        } catch (\Exception $e) {
+            Log::error('Order capture failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to capture order.', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function checkOrderPayment(Request $request) {
+       Log::info('Check Order Payment', ['request' => $request->all()]);
+    }
+
 }
