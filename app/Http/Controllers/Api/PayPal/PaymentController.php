@@ -42,7 +42,12 @@ class PaymentController extends Controller
     }
 
     public function checkOrderPayment(Request $request) {
-       Log::info('Check Order Payment', ['request' => $request->all()]);
+
+    //    Log::info('Check Order Payment', ['request' => $request->all()]);
+       $items = $request->items;
+       $email = $items->email;
+       Log::info('Check Order Payment', ['email' => $email, 'items' => $items]);
+
     }
 
 }
