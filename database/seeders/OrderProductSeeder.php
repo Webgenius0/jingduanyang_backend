@@ -18,7 +18,7 @@ class OrderProductSeeder extends Seeder
         $faker = \Faker\Factory::create();
 
         for ($i = 0; $i < 10; $i++) {
-            \App\Models\OrderPuduct::create([
+            \App\Models\OrderProduct::create([
                 'order_id' => $faker->numberBetween(1, 100),
                 'product_id' => $faker->numberBetween(1, 7),
                 'image_url' => 'backend/images/placeholder/17367592541719693934.png',

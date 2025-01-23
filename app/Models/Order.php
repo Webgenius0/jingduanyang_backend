@@ -15,9 +15,9 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
     
-    public function orderPuduct()
+    public function orderProduct()
     {
-        return $this->hasMany(OrderPuduct::class);
+        return $this->hasMany(OrderProduct::class);
     }
 
     protected $hidden = [

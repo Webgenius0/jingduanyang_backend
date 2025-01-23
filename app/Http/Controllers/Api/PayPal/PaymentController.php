@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\PayPal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\OrderPuduct;
+use App\Models\OrderProduct;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -70,7 +70,7 @@ class PaymentController extends Controller
     Log::info('Order created successfully', ['order_id' => $order->id]);
 
     foreach ($request->input('resource.purchase_units.0.items', []) as $item) {
-        OrderPuduct::create([
+        OrderProduct::create([
             'order_id' => $order->id,  
             'product_id' => $item['sku'], 
             'image_url' => $item['image_url'],

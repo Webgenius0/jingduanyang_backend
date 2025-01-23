@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OrderPuduct extends Model
+class OrderProduct extends Model
 {
     protected $guarded = [];
 

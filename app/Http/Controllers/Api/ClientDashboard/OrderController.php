@@ -18,7 +18,7 @@ class OrderController extends Controller
             return $this->error([], 'Unauthorized access', 404);
         }
 
-        $orders = Order::with('orderPuduct')->where('user_id', $user->id)->paginate(10);
+        $orders = Order::with('orderProduct')->where('user_id', $user->id)->paginate(10);
 
        if($orders->isEmpty()){
         return $this->success([], 'No orders found', 200);
