@@ -26,10 +26,10 @@ class AppointmentController extends Controller
         if (! $user) {
             return $this->error([], 'Unauthorized access', 401);
         }
-        $limit = $request->limit ?? 10;
+        $limit = $request->limit;
 
         $query = Appointment::with([
-            'user:id,avatar',
+            'user:id,first_name,last_name,avatar',
             'psychologistInformation.user',
         ]);
 
@@ -59,7 +59,7 @@ class AppointmentController extends Controller
 
     public function appointmentDetail($id)
     {
-        $data = Appointment::with(['user:id,avatar,gender', 'psychologistInformation.user'])
+        $data = Appointment::with(['user:id,first_name,last_name,avatar,gender', 'psychologistInformation.user'])
             ->where('id', $id)
             ->first();
 
@@ -97,7 +97,8 @@ class AppointmentController extends Controller
         $data->available_day    = $request->available_day;
         $data->meting_link      = $request->meting_link;
         $data->note             = $request->note;
-        $data->save();
+        $data->status           = 'accept';
+        $data->save(); 
 
         Mail::to($data->email)->send(new AppintmentScheduleUpdate($data));
 
@@ -152,6 +153,12 @@ class AppointmentController extends Controller
         $data->status = $request->status;
         $data->save();
 
+        if ($data->status === 'accept') {
+
+            Mail::to($data->email)->send(new AppintmentScheduleUpdate($data));
+
+        }
+
         return $this->success($data, 'Appointment status updated successfully', 200);
     }
 
@@ -159,7 +166,7 @@ class AppointmentController extends Controller
     {
         $user = auth()->user();
 
-        if (! $user) {
+        if (!$user) {
             return $this->error([], 'Unauthorized access', 401);
         }
 

@@ -1,10 +1,9 @@
 <?php
-
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
@@ -13,7 +12,7 @@ class Product extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'id' => 'integer',
+        'id'                  => 'integer',
         'product_category_id' => 'integer',
     ];
 
@@ -41,4 +40,10 @@ class Product extends Model
     {
         return $this->hasMany(ProductBenefit::class);
     }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'order_products');
+    }
+
 }
