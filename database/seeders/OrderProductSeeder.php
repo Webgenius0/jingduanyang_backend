@@ -21,7 +21,7 @@ class OrderProductSeeder extends Seeder
             \App\Models\OrderPuduct::create([
                 'order_id' => $faker->numberBetween(1, 100),
                 'product_id' => $faker->numberBetween(1, 7),
-                'image_url' => $faker->imageUrl(),
+                'image_url' => 'backend/images/placeholder/17367592541719693934.png',
                 'name' => $faker->name,
                 'quantity' => $faker->numberBetween(1, 10),
                 'price' => $faker->randomFloat(2, 10, 100),
