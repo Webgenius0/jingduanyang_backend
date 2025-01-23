@@ -14,4 +14,9 @@ class OrderPuduct extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }

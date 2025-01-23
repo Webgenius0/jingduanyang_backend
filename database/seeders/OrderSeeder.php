@@ -21,9 +21,9 @@ class OrderSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             \App\Models\Order::create([
-                'user_id' => $faker->numberBetween(1, 4),
+                'user_id' => 2,
                 'order_id' => $faker->uuid,
                 'amount' => $faker->randomFloat(2, 10, 100),
                 'currency' => $faker->randomElement(['USD', 'EUR', 'GBP']),

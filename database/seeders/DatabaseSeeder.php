@@ -32,5 +32,7 @@ class DatabaseSeeder extends Seeder
         $this->call(QuizzeCategoriesSeeder::class);
         $this->call(QuizzeQuestionsSeeder::class);
         $this->call(PaypalProductSeeder::class);
+        $this->call(OrderSeeder::class);
+        $this->call(OrderProductSeeder::class);
     }
 }
