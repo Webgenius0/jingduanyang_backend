@@ -15,9 +15,13 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
     
-    public function products()
+    public function orderPuduct()
     {
         return $this->hasMany(OrderPuduct::class);
     }
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }
