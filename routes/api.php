@@ -19,8 +19,10 @@ use App\Http\Controllers\Api\Web\SystemSettingController;
 use App\Http\Controllers\Api\ClientDashboard\DashboradController;
 use App\Http\Controllers\Api\DoctorDashboard\AppointmentController;
 use App\Http\Controllers\Api\ClientDashboard\ClientAppointmentController;
+use App\Http\Controllers\Api\ClientDashboard\OrderController;
 use App\Http\Controllers\Api\PayPal\PaymentController;
 use App\Http\Controllers\Api\PayPal\SubcriptionBasePayPalController;
+use App\Models\Order;
 
 /*
 |--------------------------------------------------------------------------
@@ -117,6 +119,10 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::post('/client-data/update', 'clientProfileUpdate');
 
             Route::post('/password-change','changePassword');
+        });
+
+        Route::controller(OrderController::class)->group(function () {
+            Route::get('/my-orders', 'getOrders');
         });
 
     });
