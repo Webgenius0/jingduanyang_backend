@@ -73,6 +73,7 @@ class PaymentController extends Controller
         OrderPuduct::create([
             'order_id' => $order->id,  
             'product_id' => $item['sku'], 
+            'image_url' => $item['image_url'],
             'name' => $item['name'],  
             'quantity' => $item['quantity'],  
             'price' => $item['unit_amount']['value'],  
