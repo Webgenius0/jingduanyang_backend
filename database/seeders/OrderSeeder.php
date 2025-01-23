@@ -19,6 +19,8 @@ class OrderSeeder extends Seeder
             \App\Models\Order::create([
                 'user_id' => 2,
                 'order_id' => $faker->uuid,
+                'type' => $faker->randomElement(['medicine', 'appointment']),
+                'address' => $faker->address,
                 'amount' => $faker->randomFloat(2, 10, 100),
                 'currency' => $faker->randomElement(['USD', 'EUR', 'GBP']),
                 'payment_method' => 'paypal',
