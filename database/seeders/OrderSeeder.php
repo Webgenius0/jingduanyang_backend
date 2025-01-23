@@ -10,18 +10,12 @@ class OrderSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    // $table->id();
-    // $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-    // $table->string('order_id');
-    // $table->decimal('amount', 10, 2);
-    // $table->string('currency');
-    // $table->string('payment_method');
-    // $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
+
     public function run(): void
     {
         $faker = \Faker\Factory::create();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             \App\Models\Order::create([
                 'user_id' => 2,
                 'order_id' => $faker->uuid,

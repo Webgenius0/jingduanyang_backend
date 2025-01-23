@@ -20,7 +20,8 @@ class OrderProductSeeder extends Seeder
         for ($i = 0; $i < 10; $i++) {
             \App\Models\OrderPuduct::create([
                 'order_id' => $faker->numberBetween(1, 100),
-                'product_id' => $faker->uuid,
+                'product_id' => $faker->numberBetween(1, 7),
+                'image_url' => $faker->imageUrl(),
                 'name' => $faker->name,
                 'quantity' => $faker->numberBetween(1, 10),
                 'price' => $faker->randomFloat(2, 10, 100),
