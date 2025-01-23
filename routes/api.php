@@ -123,6 +123,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
         Route::controller(OrderController::class)->group(function () {
             Route::get('/my-orders', 'getOrders');
+
+            Route::get('/singel-invoice/{id}', 'singelInvoice');
         });
 
     });

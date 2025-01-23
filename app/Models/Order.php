@@ -12,13 +12,17 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function orderPuducts()
+    public function orderProduct()
     {
-        return $this->hasMany(OrderPuduct::class);
+        return $this->hasMany(OrderProduct::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(OrderProduct::class);
     }
 
     protected $hidden = [
-        'created_at',
         'updated_at',
     ];
 }

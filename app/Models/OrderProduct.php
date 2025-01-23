@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OrderPuduct extends Model
+class OrderProduct extends Model
 {
     protected $guarded = [];
 
@@ -20,9 +20,10 @@ class OrderPuduct extends Model
         'updated_at',
     ];
 
-    public function products()
+
+    public function product()
     {
-        return $this->belongsToMany(Product::class, 'order_products');
+        return $this->belongsTo(Product::class);
     }
 
 }
