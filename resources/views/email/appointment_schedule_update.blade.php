@@ -67,16 +67,16 @@
         </div>
         <div class="content">
             <h2>Dear {{ $data->first_name}} {{ $data->last_name}},</h2>
-            <p>We wanted to inform you about an update to your appointment schedule. Please find the updated details below:</p>
+            <p>Your appointment schedule has been updated and your appointment has been accepted and pay now :</p>
             <div class="appointment-details">
-                <p><strong>New Date:</strong> {{ $data->appointment_date }}</p>
-                <p><strong>Available Time:</strong>{{ $data->appointment_time}}-{{ $data->available_times }}</p>
-                <p><strong>Available Day:</strong> {{ $data->available_day }}</p>
+                <p><strong>New Date:</strong> {{ $data->appointment_date ?? '' }}</p>
+                <p><strong>Available Time:</strong>{{ $data->appointment_time ?? ''}}-{{ $data->available_times ?? '' }}</p>
+                <p><strong>Available Day:</strong> {{ $data->available_day ?? '' }}</p>
 
-                <a href="{{ $data->meting_link }}">Meeting Link</a>
+                <a href="" class="button">Pay Now</a>
                 <hr>
 
-                Note: {{ $data->note }}
+                Note: {{ $data->note ?? '' }}
 
             </div>
             

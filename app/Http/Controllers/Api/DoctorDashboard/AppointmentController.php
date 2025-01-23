@@ -97,7 +97,8 @@ class AppointmentController extends Controller
         $data->available_day    = $request->available_day;
         $data->meting_link      = $request->meting_link;
         $data->note             = $request->note;
-        $data->save();
+        $data->status           = 'accept';
+        $data->save(); 
 
         Mail::to($data->email)->send(new AppintmentScheduleUpdate($data));
 
@@ -151,6 +152,12 @@ class AppointmentController extends Controller
 
         $data->status = $request->status;
         $data->save();
+
+        if ($data->status === 'accept') {
+
+            Mail::to($data->email)->send(new AppintmentScheduleUpdate($data));
+            
+        }
 
         return $this->success($data, 'Appointment status updated successfully', 200);
     }
