@@ -156,7 +156,7 @@ class AppointmentController extends Controller
         if ($data->status === 'accept') {
 
             Mail::to($data->email)->send(new AppintmentScheduleUpdate($data));
-            
+
         }
 
         return $this->success($data, 'Appointment status updated successfully', 200);
@@ -166,7 +166,7 @@ class AppointmentController extends Controller
     {
         $user = auth()->user();
 
-        if (! $user) {
+        if (!$user) {
             return $this->error([], 'Unauthorized access', 401);
         }
 
