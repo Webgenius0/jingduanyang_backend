@@ -187,4 +187,15 @@ class ClientAppointmentController extends Controller
 
         return $this->success($data, 'Prescription data fetched successfully', 200);
     }
+
+    public function appointmentCancel(Request $request, $id)
+    {
+        $data = Appointment::find($id);
+
+        $data->status = $request->status;
+
+        $data->save();
+
+        return $this->success($data, 'Appointment cancelled successfully', 200);
+    }
 }

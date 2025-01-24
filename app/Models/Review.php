@@ -12,7 +12,8 @@ class Review extends Model
         'id' => 'integer',
         'user_id' => 'integer',
         'product_id' => 'integer',
-        // 'created_at' => 'datetime',
+        'created_at' => 'date',
+            
     ];
 
 

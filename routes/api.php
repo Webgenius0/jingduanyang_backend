@@ -100,6 +100,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
         Route::controller(ClientAppointmentController::class)->group(function () {
             Route::get('/client-appointments', 'getAppointments');
+            Route::post('/appointment-cancel/{id}', 'appointmentCancel');
             Route::get('/client-appointment-meeting', 'appointmentMeeting');
             Route::get('/doctor', 'getDoctor');
             Route::get('/client-prescription/{id}', 'getClientPrescription');
@@ -114,6 +115,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::get('/previous-appointments ', 'previousAppointments');
             Route::get('/active-appointments', 'activeAppointments');
             Route::get('/upcoming-chackup', 'upcomingChackup');
+
+            
 
             Route::get('/client-data', 'clientData');
             Route::post('/client-data/update', 'clientProfileUpdate');
