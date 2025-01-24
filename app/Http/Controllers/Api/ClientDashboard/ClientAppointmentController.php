@@ -131,7 +131,7 @@ class ClientAppointmentController extends Controller
             return $this->error([], 'Unauthorized access', 401);
         }
         
-        $data = Prescription::with('medicines','tests','user')->where('user_id', $id)->first();
+        $data = Prescription::with('appointment.user:id,first_name,last_name,email,role','medicines','tests','user:id,first_name,last_name,email,role','user.psychologistInformation:id,user_id,qualification')->where('user_id', $id)->first();
 
         if (!$data) {
             return $this->success([], 'Data Not Found', 200);
