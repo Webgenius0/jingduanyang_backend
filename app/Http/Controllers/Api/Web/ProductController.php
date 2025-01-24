@@ -43,13 +43,31 @@ class ProductController extends Controller
             ->where('product_id', $id)
             ->select('id', 'product_id', 'user_id', 'rating', 'comment', 'created_at')
             ->orderBy('created_at', 'desc')
-            
-            ->paginate(10);
+            ->get();
+
+        $data = $data->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'product_id' => $item->product_id,
+                'user_id' => $item->user_id,
+                'rating' => $item->rating,
+                'comment' => $item->comment,
+                'created_at' => $item->created_at->format('d-m-Y'),
+                'images' => $item->images,
+                'user' => [
+                    'first_name' => $item->user->first_name,
+                    'last_name' => $item->user->last_name,
+                    'avatar' => $item->user->avatar,
+                ],
+            ];
+        });
+
+            // dd($data);
+
         if ($data->isEmpty()) {
             return $this->success([], 'Data Not Found', 200);
         }
 
         return $this->success($data, 'Review data fetched successfully', 200);
     }
-
 }
