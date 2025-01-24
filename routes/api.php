@@ -20,9 +20,9 @@ use App\Http\Controllers\Api\ClientDashboard\DashboradController;
 use App\Http\Controllers\Api\DoctorDashboard\AppointmentController;
 use App\Http\Controllers\Api\ClientDashboard\ClientAppointmentController;
 use App\Http\Controllers\Api\ClientDashboard\OrderController;
+use App\Http\Controllers\Api\ClientDashboard\ReviewController;
 use App\Http\Controllers\Api\PayPal\PaymentController;
 use App\Http\Controllers\Api\PayPal\SubcriptionBasePayPalController;
-use App\Models\Order;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,6 +127,10 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::get('/singel-invoice/{id}', 'singelInvoice');
         });
 
+        Route::controller(ReviewController::class)->group(function () {
+            Route::post('/add-review/{id}', 'addReview');
+        });
+
     });
 
     //Doctor Dashboard
@@ -222,6 +226,8 @@ Route::controller(CourseController::class)->group(function () {
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products', 'getProducts');
     Route::get('/product-detail/{id}', 'productDetail');
+
+    Route::get('/review-product/{id}', 'reviewProduct');
 });
 
 //Quzzes Route

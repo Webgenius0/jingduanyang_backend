@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use App\Models\Review;
 use App\Models\Product;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
@@ -37,4 +38,15 @@ class ProductController extends Controller
 
         return $this->success($product, 'Product data fetched successfully', 200);
     }
+
+    public function reviewProduct($id)
+    {
+        $data = Review::with('images','user:id,first_name,last_name,avatar')->where('product_id', $id)->select('id', 'product_id', 'user_id', 'rating', 'comment', 'created_at')->get();
+
+        if(!$data) {
+            return $this->success([], 'Data Not Found', 200);
+        }
+
+        return $this->success($data, 'Review data fetched successfully', 200);
+    }  
 }
