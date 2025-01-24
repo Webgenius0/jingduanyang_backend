@@ -17,10 +17,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('order_id');
+            $table->string('address');
             $table->decimal('amount', 10, 2);
             $table->string('currency');
             $table->string('payment_method');
             $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
+            $table->enum('type',['medicine','appointment'])->nullable();
             $table->timestamps();
         });
     }

@@ -21,6 +21,10 @@ class PaymentController extends Controller
     }
 
     public function createPayPalOrder(Request $request)  {
+
+        $type = $request->input('type');
+        session()->put('type', $type);
+        
         try{
             $this->provider->getAccessToken();
             $order = $this->provider->createOrder($request->all());
@@ -45,18 +49,18 @@ class PaymentController extends Controller
     }
 
    
-    public function checkOrderPayment(Request $request)
-{
+    public function checkOrderPayment(Request $request) {
    
     $email = $request->input('resource.purchase_units.0.custom_id');
-    
+    $address = $request->input('resource.purchase_units.0.shipping.address');
+    Log::info($address['address_line_1']);
     $user = User::where('email', $email)->first();
     if (!$user) {
         Log::error('User not found', ['email' => $email]);
         return response()->json(['error' => 'User not found'], 404);
     }
     
-
+    $type = session()->get('type');
 
     $order = Order::create([
         'user_id' => $user->id,
@@ -64,11 +68,15 @@ class PaymentController extends Controller
         'amount' => $request->input('resource.purchase_units.0.amount.value'),
         'currency' => $request->input('resource.purchase_units.0.amount.currency_code'),
         'payment_method' => 'PayPal', 
+        'address' => $address['address_line_1'] ?? null,
         'status' => 'pending',  
+        'type' => $type,
     ]);
 
-    Log::info('Order created successfully', ['order_id' => $order->id]);
+    session()->forget('type');
 
+    Log::info('Order created successfully', ['order_id' => $order->id]);
+    
     foreach ($request->input('resource.purchase_units.0.items', []) as $item) {
         OrderProduct::create([
             'order_id' => $order->id,  
@@ -88,5 +96,17 @@ class PaymentController extends Controller
     return response()->json(['message' => 'Order processed successfully'], 201);
 }
 
+
+public function  createOrderForAppointment(Request $request)  {
+    try{
+        $this->provider->getAccessToken();
+        $order = $this->provider->createOrder($request->all());
+
+    return response()->json(['order' => $order], 201);
+    } catch (\Exception $e) {
+        Log::error('Order creation failed', ['error' => $e->getMessage()]);
+        return response()->json(['error' => 'Failed to create order.', 'message' => $e->getMessage()], 500);
+    }
+}
 
 }
