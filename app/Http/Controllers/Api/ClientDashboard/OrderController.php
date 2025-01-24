@@ -12,17 +12,25 @@ class OrderController extends Controller
     use ApiResponse;
     
     public function getOrders(){
+        
         $user = auth()->user();
-
+        
         if (!$user) {
-            return $this->error([], 'Unauthorized access', 404);
+            return $this->error([], 'Unauthorized access', 401); 
         }
-
-        $orders = Order::with(['orderProduct.product.images'])->where('user_id', $user->id)->paginate(10);
-
-       if($orders->isEmpty()){
-        return $this->success([], 'No orders found', 200);
-       }
+       
+        $orders = Order::with([
+            'orderProduct.product:id',
+            'orderProduct.product.images'
+        ])
+        ->where('user_id', $user->id)
+        ->orderBy('created_at', 'desc') 
+        ->paginate(10);
+        
+        if ($orders->isEmpty()) {
+            return $this->success([], 'No orders found', 200);
+        }
+        
         return $this->success($orders, 'Orders fetched successfully', 200);
     }
 
