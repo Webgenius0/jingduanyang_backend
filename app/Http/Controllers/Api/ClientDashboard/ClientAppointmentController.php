@@ -114,7 +114,7 @@ class ClientAppointmentController extends Controller
             return $this->error([], 'Unauthorized access', 401);
         }
 
-        $data = Prescription::with('user.psychologistInformation')->select('prescriptions.user_id','prescriptions.appointment_id')->where('appointment_id', $user->id)->get();
+        $data = Prescription::with('user.psychologistInformation','appointment:id,appointment_date,appointment_time,consultant_type')->select('prescriptions.user_id','prescriptions.appointment_id')->where('appointment_id', $user->id)->get();
 
         if ($data->isEmpty()) {
             return $this->success([], 'Data Not Found', 200);
