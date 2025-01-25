@@ -250,6 +250,8 @@ Route::controller(SubcriptionBasePayPalController::class)->prefix('paypal')->gro
 
     Route::any('/webhook', 'checkSubscriptionPaymentCompletedOrNot');
 
+    Route::get('/subcription/plans', 'getSubcriptionPlans');
+
 });
 
 //PayPal payments routes

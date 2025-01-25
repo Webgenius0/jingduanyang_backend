@@ -109,7 +109,10 @@ class SubcriptionBasePayPalController extends Controller
         }
     }
 
-
+    public function getSubcriptionPlans() {
+        $plans = PaypalProduct::all();
+        return response()->json(['plans' => $plans], 200);
+    }
 
     // Create a subscription
     public function createSubscription(Request $request)
