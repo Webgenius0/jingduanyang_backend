@@ -8,6 +8,7 @@ use App\Models\OrderProduct;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class PaymentController extends Controller
@@ -21,10 +22,7 @@ class PaymentController extends Controller
     }
 
     public function createPayPalOrder(Request $request)  {
-
-        $type = $request->input('type');
-        session()->put('type', $type);
-        
+       
         try{
             $this->provider->getAccessToken();
             $order = $this->provider->createOrder($request->all());
@@ -36,23 +34,15 @@ class PaymentController extends Controller
         }
     }
 
-    public function captureOrder($orderId) {
-        try {
-            $this->provider->getAccessToken();
-            $capture = $this->provider->capturePaymentOrder($orderId);
 
-            return response()->json(['capture' => $capture], 200);
-        } catch (\Exception $e) {
-            Log::error('Order capture failed', ['error' => $e->getMessage()]);
-            return response()->json(['error' => 'Failed to capture order.', 'message' => $e->getMessage()], 500);
-        }
-    }
 
    
     public function checkOrderPayment(Request $request) {
-   
+
     $email = $request->input('resource.purchase_units.0.custom_id');
+    $type = $request->input('resource.purchase_units.0.invoice_id');
     $address = $request->input('resource.purchase_units.0.shipping.address');
+    
     Log::info($address['address_line_1']);
     $user = User::where('email', $email)->first();
     if (!$user) {
@@ -60,7 +50,6 @@ class PaymentController extends Controller
         return response()->json(['error' => 'User not found'], 404);
     }
     
-    $type = session()->get('type');
 
     $order = Order::create([
         'user_id' => $user->id,
@@ -73,7 +62,6 @@ class PaymentController extends Controller
         'type' => $type,
     ]);
 
-    session()->forget('type');
 
     Log::info('Order created successfully', ['order_id' => $order->id]);
     
