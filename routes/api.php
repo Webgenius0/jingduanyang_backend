@@ -20,9 +20,9 @@ use App\Http\Controllers\Api\ClientDashboard\DashboradController;
 use App\Http\Controllers\Api\DoctorDashboard\AppointmentController;
 use App\Http\Controllers\Api\ClientDashboard\ClientAppointmentController;
 use App\Http\Controllers\Api\ClientDashboard\OrderController;
+use App\Http\Controllers\Api\ClientDashboard\ReviewController;
 use App\Http\Controllers\Api\PayPal\PaymentController;
 use App\Http\Controllers\Api\PayPal\SubcriptionBasePayPalController;
-use App\Models\Order;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,6 +100,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
         Route::controller(ClientAppointmentController::class)->group(function () {
             Route::get('/client-appointments', 'getAppointments');
+            Route::post('/appointment-cancel/{id}', 'appointmentCancel');
             Route::get('/client-appointment-meeting', 'appointmentMeeting');
             Route::get('/doctor', 'getDoctor');
             Route::get('/client-prescription/{id}', 'getClientPrescription');
@@ -115,6 +116,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::get('/active-appointments', 'activeAppointments');
             Route::get('/upcoming-chackup', 'upcomingChackup');
 
+            
+
             Route::get('/client-data', 'clientData');
             Route::post('/client-data/update', 'clientProfileUpdate');
 
@@ -125,6 +128,10 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::get('/my-orders', 'getOrders');
 
             Route::get('/singel-invoice/{id}', 'singelInvoice');
+        });
+
+        Route::controller(ReviewController::class)->group(function () {
+            Route::post('/add-review/{id}', 'addReview');
         });
 
     });
@@ -222,6 +229,8 @@ Route::controller(CourseController::class)->group(function () {
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products', 'getProducts');
     Route::get('/product-detail/{id}', 'productDetail');
+
+    Route::get('/review-product/{id}', 'reviewProduct');
 });
 
 //Quzzes Route

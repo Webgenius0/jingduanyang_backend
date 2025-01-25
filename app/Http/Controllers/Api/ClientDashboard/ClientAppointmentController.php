@@ -114,7 +114,7 @@ class ClientAppointmentController extends Controller
             return $this->error([], 'Unauthorized access', 401);
         }
 
-        $data = Prescription::with('user.psychologistInformation')->select('prescriptions.user_id','prescriptions.appointment_id')->where('appointment_id', $user->id)->get();
+        $data = Prescription::with('user.psychologistInformation','appointment:id,appointment_date,appointment_time,consultant_type')->select('prescriptions.user_id','prescriptions.appointment_id')->where('appointment_id', $user->id)->get();
 
         if ($data->isEmpty()) {
             return $this->success([], 'Data Not Found', 200);
@@ -131,7 +131,7 @@ class ClientAppointmentController extends Controller
             return $this->error([], 'Unauthorized access', 401);
         }
         
-        $data = Prescription::with('medicines','tests','user')->where('user_id', $id)->first();
+        $data = Prescription::with('appointment.user:id,first_name,last_name,email,role','medicines','tests','user:id,first_name,last_name,email,role','user.psychologistInformation:id,user_id,qualification')->where('user_id', $id)->first();
 
         if (!$data) {
             return $this->success([], 'Data Not Found', 200);
@@ -186,5 +186,16 @@ class ClientAppointmentController extends Controller
         }
 
         return $this->success($data, 'Prescription data fetched successfully', 200);
+    }
+
+    public function appointmentCancel(Request $request, $id)
+    {
+        $data = Appointment::find($id);
+
+        $data->status = $request->status;
+
+        $data->save();
+
+        return $this->success($data, 'Appointment cancelled successfully', 200);
     }
 }

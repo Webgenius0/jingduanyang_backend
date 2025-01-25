@@ -29,4 +29,12 @@ class Appointment extends Model
         return $this->belongsTo(PsychologistInformation::class);
     }
 
+    /**
+     * Get the prescription associated with the appointment.
+     */
+    public function prescription()
+    {
+        return $this->hasOne(Prescription::class);
+    }
+
 }

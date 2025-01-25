@@ -16,6 +16,7 @@ class OrderProduct extends Model
     }
 
     protected $hidden = [
+        'image_url',
         'created_at',
         'updated_at',
     ];

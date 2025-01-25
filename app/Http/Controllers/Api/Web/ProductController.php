@@ -1,26 +1,25 @@
 <?php
-
 namespace App\Http\Controllers\Api\Web;
 
+use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Review;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
     use ApiResponse;
-    
+
     public function getProducts(Request $request)
     {
         $limit = $request->limit;
-        if(!$limit)
-        {
+        if (! $limit) {
             $limit = 20;
         }
-        $data = Product::with(['images'])->where('status','active')->paginate($limit);
+        $data = Product::with(['images'])->where('status', 'active')->paginate($limit);
 
-        if (!$data) {
+        if (! $data) {
             return $this->success([], 'Data Not Found', 200);
         }
 
@@ -29,12 +28,46 @@ class ProductController extends Controller
 
     public function productDetail($id)
     {
-        $product = Product::with(['images','benefits'])->find($id);
+        $product = Product::with(['images', 'benefits'])->find($id);
 
         if (empty($product)) {
             return $this->success([], 'Product Not Found', 200);
         }
 
         return $this->success($product, 'Product data fetched successfully', 200);
+    }
+
+    public function reviewProduct($id)
+    {
+        $data = Review::with('images', 'user:id,first_name,last_name,avatar')
+            ->where('product_id', $id)
+            ->select('id', 'product_id', 'user_id', 'rating', 'comment', 'created_at')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $data = $data->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'product_id' => $item->product_id,
+                'user_id' => $item->user_id,
+                'rating' => $item->rating,
+                'comment' => $item->comment,
+                'created_at' => $item->created_at->format('d-m-Y'),
+                'images' => $item->images,
+                'user' => [
+                    'first_name' => $item->user->first_name,
+                    'last_name' => $item->user->last_name,
+                    'avatar' => $item->user->avatar,
+                ],
+            ];
+        });
+
+            // dd($data);
+
+        if ($data->isEmpty()) {
+            return $this->success([], 'Data Not Found', 200);
+        }
+
+        return $this->success($data, 'Review data fetched successfully', 200);
     }
 }

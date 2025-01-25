@@ -34,5 +34,12 @@ class DatabaseSeeder extends Seeder
         $this->call(PaypalProductSeeder::class);
         $this->call(OrderSeeder::class);
         $this->call(OrderProductSeeder::class);
+        $this->call(PsychologistInformationSeeder::class);
+        $this->call(AppointmentsSeeder::class);
+        $this->call(PrescriptionSeeder::class);
+        $this->call(MedicineSeeder::class);
+        $this->call(TestsTableSeeder::class);
+        $this->call(ReviewSeeder::class);
+        $this->call(ReviewImageSeeder::class);
     }
 }
