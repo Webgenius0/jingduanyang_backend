@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class PaymentController extends Controller
@@ -22,7 +23,8 @@ class PaymentController extends Controller
     }
 
     public function createPayPalOrder(Request $request)  {
-       
+      
+
         try{
             $this->provider->getAccessToken();
             $order = $this->provider->createOrder($request->all());
@@ -96,5 +98,6 @@ public function  createOrderForAppointment(Request $request)  {
         return response()->json(['error' => 'Failed to create order.', 'message' => $e->getMessage()], 500);
     }
 }
+
 
 }

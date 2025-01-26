@@ -258,7 +258,5 @@ Route::controller(SubcriptionBasePayPalController::class)->prefix('paypal')->gro
 Route::controller(PaymentController::class)->prefix('paypal')->group(function () {
     Route::post('/create-order', 'createPayPalOrder');
     Route::any('/check-order-payment', 'checkOrderPayment');
-    Route::post('/capture-order/{orderId}', 'captureOrder');
-    Route::post('/create-order-for-appointment', 'createOrderForAppointment');
 
 });
