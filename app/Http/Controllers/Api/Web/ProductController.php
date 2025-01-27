@@ -1,11 +1,12 @@
 <?php
 namespace App\Http\Controllers\Api\Web;
 
-use App\Http\Controllers\Controller;
-use App\Models\Product;
 use App\Models\Review;
+use App\Models\Product;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
@@ -14,21 +15,31 @@ class ProductController extends Controller
     public function getProducts(Request $request)
     {
         $limit = $request->limit;
-        if (! $limit) {
+        if (!$limit) {
             $limit = 20;
         }
-        $data = Product::with(['images'])->where('status', 'active')->paginate($limit);
-
-        if (! $data) {
+    
+        $data = Product::with(['images'])
+            ->select('products.*', 
+                DB::raw('(SELECT AVG(rating) FROM reviews WHERE reviews.product_id = products.id) as average_rating')
+            )
+            ->where('status', 'active')
+            ->paginate($limit);
+    
+        if (!$data) {
             return $this->success([], 'Data Not Found', 200);
         }
-
+    
         return $this->success($data, 'Product data fetched successfully', 200);
     }
 
     public function productDetail($id)
     {
-        $product = Product::with(['images', 'benefits'])->find($id);
+        $product = Product::with(['images', 'benefits'])
+                    ->select('products.*', 
+                        DB::raw('(SELECT AVG(rating) FROM reviews WHERE reviews.product_id = products.id) as average_rating')
+                    )
+                    ->find($id);
 
         if (empty($product)) {
             return $this->success([], 'Product Not Found', 200);
