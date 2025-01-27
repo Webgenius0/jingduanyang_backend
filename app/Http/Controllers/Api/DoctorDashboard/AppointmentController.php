@@ -497,38 +497,49 @@ class AppointmentController extends Controller
         return $this->success($data, 'Total earnings fetched successfully', 200);
     }
 
-    public function MyInvoice(Request $request) {
+    public function MyInvoice(Request $request)
+    {
         $date = $request->date;
         $first_name = $request->first_name;
         $last_name = $request->last_name;
-        
+        $limit = $request->limit ?? 10; // Set default limit if not provided
         $user_id = auth()->user()->id;
-        
+    
+        // Start building the query
         $data = Order::where('type', 'appointment')
-            ->with(['orderProduct' => function($query) use ($user_id) {
-                $query->where('product_id', $user_id);
-            }])
-            ->join('users', 'orders.user_id', '=', 'users.id'); 
-        
-        if ($date) {
-            $data->whereDate('orders.created_at', $date); 
-        }
-        
-        if ($first_name || $last_name) {
-            $data->where(function($query) use ($first_name, $last_name) {
+            ->with([
+                'orderProduct' => function ($query) use ($user_id) {
+                    $query->where('product_id', $user_id);
+                },
+            ])
+            ->where(function ($query) use ($date) {
+                // Filter by date
+                if ($date) {
+                    $query->whereDate('created_at', $date);
+                }
+            })
+            ->with('user', function ($query) use ($first_name, $last_name) {
+                // Search by user's first name or last name
                 if ($first_name) {
-                    $query->where('users.first_name', $first_name); 
+                    $query->where('first_name', 'like', '%' . $first_name . '%');
                 }
                 if ($last_name) {
-                    $query->orWhere('users.last_name', $last_name); 
+                    $query->orWhere('last_name', 'like', '%' . $last_name . '%');
                 }
             });
+    
+        // Paginate the results
+        $data = $data->paginate($limit);
+    
+        // Return the result
+        if ($data->isEmpty()) {
+            return $this->success([], 'No data found', 200);
         }
-        
-        $data = $data->paginate(10);
-        
+    
         return $this->success($data, 'Data fetched successfully', 200);
     }
+    
+    
     
     
     
