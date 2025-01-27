@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\AppintmentScheduleUpdate;
 use App\Models\Appointment;
 use App\Models\Medicine;
+use App\Models\Order;
 use App\Models\Prescription;
 use App\Models\Test;
 use App\Traits\ApiResponse;
@@ -20,7 +21,7 @@ class AppointmentController extends Controller
 
     public function getAppointments(Request $request)
     {
-        
+
         $user = auth()->user();
 
         if (! $user) {
@@ -98,7 +99,7 @@ class AppointmentController extends Controller
         $data->meting_link      = $request->meting_link;
         $data->note             = $request->note;
         $data->status           = 'accept';
-        $data->save(); 
+        $data->save();
 
         Mail::to($data->email)->send(new AppintmentScheduleUpdate($data));
 
@@ -166,7 +167,7 @@ class AppointmentController extends Controller
     {
         $user = auth()->user();
 
-        if (!$user) {
+        if (! $user) {
             return $this->error([], 'Unauthorized access', 401);
         }
 
@@ -185,15 +186,15 @@ class AppointmentController extends Controller
 
         // Group appointments by date and count
         $groupedData = $data->groupBy('appointment_date')
-        ->map(function ($appointments, $date) {
-            // Convert date to Carbon instance to ensure we can use format()
-            $formattedDate = Carbon::parse($date)->format('Y-m-d');
-            
-            return [
-                'appointmentCount' => (string) $appointments->count(), // Ensure appointment count is a string
-                'date' => $formattedDate, // Format date to 'YYYY-MM-DD'
-            ];
-        });
+            ->map(function ($appointments, $date) {
+                // Convert date to Carbon instance to ensure we can use format()
+                $formattedDate = Carbon::parse($date)->format('Y-m-d');
+
+                return [
+                    'appointmentCount' => (string) $appointments->count(), // Ensure appointment count is a string
+                    'date'             => $formattedDate,                  // Format date to 'YYYY-MM-DD'
+                ];
+            });
 
         return $this->success($groupedData->values(), 'Appointment data fetched successfully', 200);
     }
@@ -459,11 +460,10 @@ class AppointmentController extends Controller
             return $this->error([], 'Unauthorized access', 401);
         }
 
-        $totalEarnings = Appointment::where('status', '!=', 'cancelled')
-            ->whereHas('psychologistInformation', function ($q) use ($user) {
-                $q->where('user_id', $user->id);
-            })
-            ->sum('price');
+        // Calculate total earnings for the authenticated user
+        $totalEarnings = Order::where('type', 'appointment')->whereHas('orderProduct', function ($query) use ($user) {
+            $query->where('product_id', $user->id);
+        })->sum('amount'); // Sum the amount column in the orders table
 
         return $this->success($totalEarnings, 'Total earnings fetched successfully', 200);
     }
