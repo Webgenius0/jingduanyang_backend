@@ -468,11 +468,32 @@ class AppointmentController extends Controller
 
         $totalEarnings = $baseQuery->sum('amount');
 
+        $currentPeriodEarnings = (clone $baseQuery)
+            ->whereDate('created_at', now()->toDateString())
+            ->sum('amount');
+
+        $previousPeriodEarnings = (clone $baseQuery)
+            ->whereDate('created_at', now()->subDay()->toDateString())
+            ->sum('amount');
+
+        // Calculate growth
+        $growth = $currentPeriodEarnings - $previousPeriodEarnings;
+
+        // Determine growth status
+        $status = $growth > 0 ? 'increase' : ($growth < 0 ? 'decrease' : 'no change');
+
+        // Prepare response data
+        $data = [
+            'total_earnings' => $totalEarnings,
+            'growth'         => $growth,
+            'status'         => $status,
+        ];
+
         if ($totalEarnings == null) {
             return $this->success([], 'Data Not Found', 200);
         }
 
-        return $this->success($totalEarnings, 'Total earnings fetched successfully', 200);
+        return $this->success($data, 'Total earnings fetched successfully', 200);
     }
 
     public function MyInvoice() {
