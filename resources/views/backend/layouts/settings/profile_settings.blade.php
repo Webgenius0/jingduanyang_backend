@@ -72,6 +72,9 @@
                                                 </span>
                                             @enderror
                                         </div>
+                                    </div>
+
+                                    <div class="col-12 mt-4">
                                         <div class="input-style-1">
                                             <label for="name">User Last Name</label>
                                             <input type="text" class="form-control @error('last_name') is-invalid @enderror"
