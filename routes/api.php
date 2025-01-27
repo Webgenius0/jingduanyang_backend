@@ -14,15 +14,16 @@ use App\Http\Controllers\Api\Web\ProductController;
 use App\Http\Controllers\Api\Web\ServiceController;
 use App\Http\Controllers\Api\Web\HomePageController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\PayPal\PaymentController;
 use App\Http\Controllers\Api\Web\DynamicPageController;
 use App\Http\Controllers\Api\Web\SystemSettingController;
-use App\Http\Controllers\Api\ClientDashboard\DashboradController;
-use App\Http\Controllers\Api\DoctorDashboard\AppointmentController;
-use App\Http\Controllers\Api\ClientDashboard\ClientAppointmentController;
 use App\Http\Controllers\Api\ClientDashboard\OrderController;
 use App\Http\Controllers\Api\ClientDashboard\ReviewController;
-use App\Http\Controllers\Api\PayPal\PaymentController;
+use App\Http\Controllers\Api\ClientDashboard\DashboradController;
+use App\Http\Controllers\Api\ClientDashboard\RescheduleController;
+use App\Http\Controllers\Api\DoctorDashboard\AppointmentController;
 use App\Http\Controllers\Api\PayPal\SubcriptionBasePayPalController;
+use App\Http\Controllers\Api\ClientDashboard\ClientAppointmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -110,12 +111,16 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::post('/make-appointment/{id}', 'makeAppointments');
         });
 
+        Route::controller(RescheduleController::class)->group(function () {
+             Route::get('/singel-client-appointments/{id}', 'singelAppointments');
+             Route::post('/reschedule-appointments/{id}', 'rescheduleAppointments');
+        });
+
         Route::controller(DashboradController::class)->group(function () {
             Route::get('/doctor-list', 'doctorList');
             Route::get('/previous-appointments ', 'previousAppointments');
             Route::get('/active-appointments', 'activeAppointments');
             Route::get('/upcoming-chackup', 'upcomingChackup');
-
             
 
             Route::get('/client-data', 'clientData');
@@ -144,6 +149,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::get('/doctor/data', 'doctorData');
             Route::post('/doctor/data/update', 'doctorProfileUpdate');
             Route::post('/password-update','changePassword');
+
+            Route::get('/client-visit-history', 'clientVisitHistory');
         });
 
         //Appointments Route 
@@ -155,11 +162,11 @@ Route::group(['middleware' => ['jwt.verify']], function () {
             Route::post('/appointment-status/{id}', 'appointmentStatus');
             Route::get('/appointment-schedule', 'appointmentSchedule');
             Route::post('/prescription/create', 'createPrescription');
-
             Route::get('/upcoming-appointments', 'upcomingAppointments');
-
             Route::get('/total-appointments', 'totalAppointments');
             Route::get('/total-patient', 'totalPatient');
+
+            Route::get('/total-earnings', 'totalEarnings');
 
             Route::get('/new-appointments', 'newAppointments');
             Route::get('/new-clients', 'newClients');

@@ -6,7 +6,7 @@ use App\Models\Appointment;
 use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class TeamController extends Controller
@@ -32,17 +32,33 @@ class TeamController extends Controller
         return $this->success($data, 'Doctor fetched successfully', 200);
     }
 
-    public function teamDetail($id)
+    public function teamDetail($id, Request $request)
     {
-
         $user = User::with('psychologistInformation')->find($id);
 
         if (empty($user)) {
             return $this->success([], 'Data Not Found', 200);
         }
 
-        if (! empty($user->psychologistInformation)) {
-            $user->psychologistInformation->increment('views');
+        // Log the client visit
+        $ipAddress = $request->ip();
+        $date      = now()->toDateString();
+
+        // Check if the entry already exists
+        $existingVisit = DB::table('client_visits')
+            ->where('user_id', $id)
+            ->where('ip', ip2long($ipAddress))
+            ->first();
+
+        if (!$existingVisit) {
+            // Insert into client_visits table
+            DB::table('client_visits')->insert([
+                'user_id'    => $id,
+                'ip'         => ip2long($ipAddress),
+                'date'       => $date,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
 
         return $this->success($user, 'Doctor fetched successfully', 200);
@@ -69,7 +85,7 @@ class TeamController extends Controller
 
         $user = auth()->user();
 
-        if (!$user) {
+        if (! $user) {
             return $this->error([], 'User Not Found', 404);
         }
 
@@ -98,7 +114,7 @@ class TeamController extends Controller
             'message'                     => $request->message,
         ]);
 
-        if (!$data) {
+        if (! $data) {
             return $this->error([], 'Data Not Found', 404);
         }
 

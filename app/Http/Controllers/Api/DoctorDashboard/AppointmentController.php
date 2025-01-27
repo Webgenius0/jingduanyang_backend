@@ -21,7 +21,7 @@ class AppointmentController extends Controller
 
     public function getAppointments(Request $request)
     {
-        
+
         $user = auth()->user();
 
         if (! $user) {
@@ -99,7 +99,7 @@ class AppointmentController extends Controller
         $data->meting_link      = $request->meting_link;
         $data->note             = $request->note;
         $data->status           = 'accept';
-        $data->save(); 
+        $data->save();
 
         Mail::to($data->email)->send(new AppintmentScheduleUpdate($data));
 
@@ -167,7 +167,7 @@ class AppointmentController extends Controller
     {
         $user = auth()->user();
 
-        if (!$user) {
+        if (! $user) {
             return $this->error([], 'Unauthorized access', 401);
         }
 
@@ -186,15 +186,15 @@ class AppointmentController extends Controller
 
         // Group appointments by date and count
         $groupedData = $data->groupBy('appointment_date')
-        ->map(function ($appointments, $date) {
-            // Convert date to Carbon instance to ensure we can use format()
-            $formattedDate = Carbon::parse($date)->format('Y-m-d');
-            
-            return [
-                'appointmentCount' => (string) $appointments->count(), // Ensure appointment count is a string
-                'date' => $formattedDate, // Format date to 'YYYY-MM-DD'
-            ];
-        });
+            ->map(function ($appointments, $date) {
+                // Convert date to Carbon instance to ensure we can use format()
+                $formattedDate = Carbon::parse($date)->format('Y-m-d');
+
+                return [
+                    'appointmentCount' => (string) $appointments->count(), // Ensure appointment count is a string
+                    'date'             => $formattedDate,                  // Format date to 'YYYY-MM-DD'
+                ];
+            });
 
         return $this->success($groupedData->values(), 'Appointment data fetched successfully', 200);
     }
@@ -452,6 +452,50 @@ class AppointmentController extends Controller
         return $this->success($response, 'Gender Chart data fetched successfully', 200);
     }
 
+
+    public function totalEarnings()
+    {
+        $user = auth()->user();
+
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+
+        // Calculate total earnings for the authenticated user
+        $baseQuery = Order::where('type', 'appointment')->whereHas('orderProduct', function ($query) use ($user) {
+            $query->where('product_id', $user->id);
+        }); // Sum the amount column in the orders table
+
+        $totalEarnings = $baseQuery->sum('amount');
+
+        $currentPeriodEarnings = (clone $baseQuery)
+            ->whereDate('created_at', now()->toDateString())
+            ->sum('amount');
+
+        $previousPeriodEarnings = (clone $baseQuery)
+            ->whereDate('created_at', now()->subDay()->toDateString())
+            ->sum('amount');
+
+        // Calculate growth
+        $growth = $currentPeriodEarnings - $previousPeriodEarnings;
+
+        // Determine growth status
+        $status = $growth > 0 ? 'increase' : ($growth < 0 ? 'decrease' : 'no change');
+
+        // Prepare response data
+        $data = [
+            'total_earnings' => $totalEarnings,
+            'growth'         => $growth,
+            'status'         => $status,
+        ];
+
+        if ($totalEarnings == null) {
+            return $this->success([], 'Data Not Found', 200);
+        }
+
+        return $this->success($data, 'Total earnings fetched successfully', 200);
+    }
+
     public function MyInvoice() {
         $user_id = auth()->user()->id;
     
@@ -468,6 +512,5 @@ class AppointmentController extends Controller
         $data = Order::where('id',$id)->where('type','appointment')->with('user')->first();
         return $this->success($data, 'Data fetched successfully', 200);
     }
-    
 
 }
