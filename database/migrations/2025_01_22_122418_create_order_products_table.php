@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('quantity');
             $table->string('price');
             $table->string('currency');
-            $table->string('description');
+            $table->text('description');
             $table->timestamps();
         });
     }

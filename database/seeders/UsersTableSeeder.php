@@ -56,6 +56,16 @@ class UsersTableSeeder extends Seeder
                 'remember_token' => Str::random(10),
                 'created_at' => now(),
             ],
+            [
+                'first_name' => 'Rafi Ahmed',
+                'email' => 'rafi.cse.ahmed@gmail.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('12345678'),
+                'role' => 'doctor',
+                'avatar' => 'backend/images/placeholder/doctor-default.png',
+                'remember_token' => Str::random(10),
+                'created_at' => now(),
+            ]
         ]);
     }
 }

@@ -452,6 +452,7 @@ class AppointmentController extends Controller
         return $this->success($response, 'Gender Chart data fetched successfully', 200);
     }
 
+
     public function totalEarnings()
     {
         $user = auth()->user();
@@ -461,11 +462,29 @@ class AppointmentController extends Controller
         }
 
         // Calculate total earnings for the authenticated user
-        $totalEarnings = Order::where('type', 'appointment')->whereHas('orderProduct', function ($query) use ($user) {
+        $baseQuery = Order::where('type', 'appointment')->whereHas('orderProduct', function ($query) use ($user) {
             $query->where('product_id', $user->id);
-        })->sum('amount'); // Sum the amount column in the orders table
+        }); // Sum the amount column in the orders table
+
+        $totalEarnings = $baseQuery->sum('amount');
+
+        if ($totalEarnings == null) {
+            return $this->success([], 'Data Not Found', 200);
+        }
 
         return $this->success($totalEarnings, 'Total earnings fetched successfully', 200);
+    }
+
+    public function MyInvoice() {
+        $user_id = auth()->user()->id;
+    
+        $data = Order::where('type', 'appointment')
+            ->with(['orderProduct' => function($query) use ($user_id) {
+                $query->where('product_id', $user_id);
+            },'user'])
+            ->get();
+    
+        return response()->json($data);
     }
 
 }
