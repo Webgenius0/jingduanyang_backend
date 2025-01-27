@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="d-flex flex-column">
                                     <div class="fw-bold d-flex align-items-center fs-5">
-                                        {{ auth()->user()->name }}
+                                        {{ auth()->user()->first_name }} {{ auth()->user()->last_name }}
                                     </div>
 
                                     <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">
