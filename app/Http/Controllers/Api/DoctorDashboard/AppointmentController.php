@@ -459,9 +459,14 @@ class AppointmentController extends Controller
             ->with(['orderProduct' => function($query) use ($user_id) {
                 $query->where('product_id', $user_id);
             },'user'])
-            ->get();
-    
-        return response()->json($data);
+            ->paginate(10);
+
+        return $this->success($data, 'Data fetched successfully', 200);
+    }
+
+    public function AppointmentSingleDetails($id) {
+        $data = Order::where('id',$id)->where('type','appointment')->with('user')->first();
+        return $this->success($data, 'Data fetched successfully', 200);
     }
     
 
