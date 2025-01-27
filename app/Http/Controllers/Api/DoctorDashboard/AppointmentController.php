@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
 
 class AppointmentController extends Controller
 {
@@ -496,21 +497,46 @@ class AppointmentController extends Controller
         return $this->success($data, 'Total earnings fetched successfully', 200);
     }
 
-    public function MyInvoice() {
+    public function MyInvoice(Request $request) {
+        $date = $request->date;
+        $first_name = $request->first_name;
+        $last_name = $request->last_name;
+        
         $user_id = auth()->user()->id;
-    
+        
         $data = Order::where('type', 'appointment')
             ->with(['orderProduct' => function($query) use ($user_id) {
                 $query->where('product_id', $user_id);
-            },'user'])
-            ->paginate(10);
-
+            }])
+            ->join('users', 'orders.user_id', '=', 'users.id'); 
+        
+        if ($date) {
+            $data->whereDate('orders.created_at', $date); 
+        }
+        
+        if ($first_name || $last_name) {
+            $data->where(function($query) use ($first_name, $last_name) {
+                if ($first_name) {
+                    $query->where('users.first_name', $first_name); 
+                }
+                if ($last_name) {
+                    $query->orWhere('users.last_name', $last_name); 
+                }
+            });
+        }
+        
+        $data = $data->paginate(10);
+        
         return $this->success($data, 'Data fetched successfully', 200);
     }
+    
+    
+    
 
     public function AppointmentSingleDetails($id) {
         $data = Order::where('id',$id)->where('type','appointment')->with('user')->first();
         return $this->success($data, 'Data fetched successfully', 200);
     }
 
+  
 }

@@ -175,6 +175,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
             Route::get('/my-invoice',"MyInvoice");
             Route::get('/appointment-single-details/{id}','AppointmentSingleDetails');
+            Route::get('/search-invoice','searchInvoice');
         });
 
     });
