@@ -497,31 +497,46 @@ class AppointmentController extends Controller
         return $this->success($data, 'Total earnings fetched successfully', 200);
     }
 
-    public function MyInvoice() {
+    public function MyInvoice(Request $request) {
+        $date = $request->date;
+        $first_name = $request->first_name;
+        $last_name = $request->last_name;
+        
         $user_id = auth()->user()->id;
-    
+        
         $data = Order::where('type', 'appointment')
             ->with(['orderProduct' => function($query) use ($user_id) {
                 $query->where('product_id', $user_id);
-            },'user'])
-            ->paginate(10);
-
+            }])
+            ->join('users', 'orders.user_id', '=', 'users.id'); 
+        
+        if ($date) {
+            $data->whereDate('orders.created_at', $date); 
+        }
+        
+        if ($first_name || $last_name) {
+            $data->where(function($query) use ($first_name, $last_name) {
+                if ($first_name) {
+                    $query->where('users.first_name', $first_name); 
+                }
+                if ($last_name) {
+                    $query->orWhere('users.last_name', $last_name); 
+                }
+            });
+        }
+        
+        $data = $data->get();
+        
         return $this->success($data, 'Data fetched successfully', 200);
     }
+    
+    
+    
 
     public function AppointmentSingleDetails($id) {
         $data = Order::where('id',$id)->where('type','appointment')->with('user')->first();
         return $this->success($data, 'Data fetched successfully', 200);
     }
 
-    public function searchInvoice(Request $request)  {
-        $date = $request->date;
-        $first_name = $request->first_name;
-        $last_name = $request->last_name;
-        $data = Order::where('type','appointment')->whereDate('created_at',$date)->with(['user' => function($query) use ($first_name,$last_name){
-            $query->where('first_name','like','%'. $first_name .'%')->orWhere('last_name','like','%'. $last_name .'%');
-        }])->get();
-        return $this->success($data, 'Data fetched successfully', 200);
-
-    }
+  
 }
