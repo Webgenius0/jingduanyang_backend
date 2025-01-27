@@ -62,7 +62,7 @@
                                 <div class="row">
                                     <div class="col-12 mt-4">
                                         <div class="input-style-1">
-                                            <label for="name">User First Name</label>
+                                            <label for="name">First Name</label>
                                             <input type="text" class="form-control @error('first_name') is-invalid @enderror"
                                                 name="first_name" id="name" value="{{ Auth::user()->first_name }}"
                                                 placeholder="Enter First Name" />
@@ -76,7 +76,7 @@
 
                                     <div class="col-12 mt-4">
                                         <div class="input-style-1">
-                                            <label for="name">User Last Name</label>
+                                            <label for="name">Last Name</label>
                                             <input type="text" class="form-control @error('last_name') is-invalid @enderror"
                                                 name="last_name" id="name" value="{{ Auth::user()->last_name }}"
                                                 placeholder="Enter Last Name" />
