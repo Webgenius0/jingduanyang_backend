@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
 
 class AppointmentController extends Controller
 {
@@ -513,4 +514,14 @@ class AppointmentController extends Controller
         return $this->success($data, 'Data fetched successfully', 200);
     }
 
+    public function searchInvoice(Request $request)  {
+        $date = $request->date;
+        $first_name = $request->first_name;
+        $last_name = $request->last_name;
+        $data = Order::where('type','appointment')->whereDate('created_at',$date)->with(['user' => function($query) use ($first_name,$last_name){
+            $query->where('first_name','like','%'. $first_name .'%')->orWhere('last_name','like','%'. $last_name .'%');
+        }])->get();
+        return $this->success($data, 'Data fetched successfully', 200);
+
+    }
 }
