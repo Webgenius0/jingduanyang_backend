@@ -51,6 +51,18 @@ class OrderSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'user_id' => 2,
+                'order_id' => 'ORD123458',
+                'address' => '789 Tertiary St, City, Country',
+                'amount' => 90.00,
+                'currency' => 'USD',
+                'payment_method' => 'Bank Transfer',
+                'status' => 'cancelled',
+                'type' => 'medicine',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
      

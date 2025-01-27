@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\AppintmentScheduleUpdate;
 use App\Models\Appointment;
 use App\Models\Medicine;
+use App\Models\Order;
 use App\Models\Prescription;
 use App\Models\Test;
 use App\Traits\ApiResponse;
@@ -450,5 +451,18 @@ class AppointmentController extends Controller
 
         return $this->success($response, 'Gender Chart data fetched successfully', 200);
     }
+
+    public function MyInvoice() {
+        $user_id = auth()->user()->id;
+    
+        $data = Order::where('type', 'appointment')
+            ->with(['orderProduct' => function($query) use ($user_id) {
+                $query->where('product_id', $user_id);
+            },'user'])
+            ->get();
+    
+        return response()->json($data);
+    }
+    
 
 }

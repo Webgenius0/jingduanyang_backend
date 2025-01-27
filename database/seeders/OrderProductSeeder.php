@@ -10,7 +10,7 @@ class OrderProductSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-    */
+     */
 
 
 
@@ -28,7 +28,8 @@ class OrderProductSeeder extends Seeder
                 'description' => 'Description for Product 1',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ],[
+            ],
+            [
                 'order_id' => 2,
                 'product_id' => 2,
                 'image_url' => 'backend/images/placeholder/17367592541719693934.png',
@@ -39,15 +40,28 @@ class OrderProductSeeder extends Seeder
                 'description' => 'Description for Product 2',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ],[
+            ],
+            [
                 'order_id' => 3,
                 'product_id' => 3,
                 'image_url' => 'backend/images/placeholder/17367592541719693934.png',
-                'name' => 'Product 3',
-                'quantity' => 3,
-                'price' => 30, // Random price between 10 and 100
+                'name' => 'Rafi Ahmed',
+                'quantity' => 1,
+                'price' => 300, // Random price between 10 and 100
                 'currency' => 'USD',
-                'description' => 'Description for Product 3',
+                'description' => 'I am a dedicated and experienced medicine specialist with a deep commitment to diagnosing, managing, and treating a wide range of medical conditions. My approach combines evidence-based practices with personalized care to ensure the best outcomes for my patients. I am passionate about staying updated with advancements in internal medicine and fostering a strong doctor-patient relationship built on trust, empathy, and open communication.',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'order_id' => 4,
+                'product_id' => 3,
+                'image_url' => 'backend/images/placeholder/17367592541719693934.png',
+                'name' => 'Rafi Ahmed',
+                'quantity' => 1,
+                'price' => 100, // Random price between 10 and 100
+                'currency' => 'USD',
+                'description' => 'I am a dedicated and experienced medicine specialist with a deep commitment to diagnosing, managing, and treating a wide range of medical conditions. My approach combines evidence-based practices with personalized care to ensure the best outcomes for my patients. I am passionate about staying updated with advancements in internal medicine and fostering a strong doctor-patient relationship built on trust, empathy, and open communication.',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]
