@@ -525,7 +525,7 @@ class AppointmentController extends Controller
             });
         }
         
-        $data = $data->get();
+        $data = $data->paginate(10);
         
         return $this->success($data, 'Data fetched successfully', 200);
     }
