@@ -451,4 +451,21 @@ class AppointmentController extends Controller
         return $this->success($response, 'Gender Chart data fetched successfully', 200);
     }
 
+    public function totalEarnings()
+    {
+        $user = auth()->user();
+
+        if (! $user) {
+            return $this->error([], 'Unauthorized access', 401);
+        }
+
+        $totalEarnings = Appointment::where('status', '!=', 'cancelled')
+            ->whereHas('psychologistInformation', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })
+            ->sum('price');
+
+        return $this->success($totalEarnings, 'Total earnings fetched successfully', 200);
+    }
+
 }

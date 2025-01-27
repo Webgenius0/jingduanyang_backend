@@ -1,16 +1,17 @@
 <?php
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Models\ClientVisit;
+use App\Models\PsychologistInformation;
 use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use App\Models\PsychologistInformation;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
@@ -365,7 +366,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
-            'password' => [
+            'password'     => [
                 'required',
                 'string',
                 'min:8',
@@ -383,7 +384,7 @@ class UserController extends Controller
             $user = auth()->user();
 
             // Check if the old password is correct
-            if (!Hash::check($request->input('old_password'), $user->password)) {
+            if (! Hash::check($request->input('old_password'), $user->password)) {
                 return $this->error([], 'Old password is incorrect', 422);
             }
 
@@ -396,4 +397,35 @@ class UserController extends Controller
             return $this->error([], $e->getMessage(), 500);
         }
     }
+
+    public function clientVisitHistory(Request $request)
+    {
+        $user = Auth::user();
+
+        if (! $user) {
+            return $this->success([], "User Not Found", 200);
+        }
+
+                                                 // Get the month filter from the request
+        $monthFilter = $request->input('month'); // Example: 'Jan', 'Feb', etc.
+
+        $query = ClientVisit::where('user_id', $user->id)
+            ->selectRaw('DATE_FORMAT(created_at, "%b") as month, COUNT(*) as visits')
+            ->groupBy('month')
+            ->orderBy('month', 'asc');
+
+        // Apply the month filter if provided
+        if ($monthFilter) {
+            $query->having('month', $monthFilter);
+        }
+
+        $data = $query->get();
+
+        if($data->isEmpty()) {
+            return $this->success([], 'Data Not Found', 200);
+        }
+
+        return $this->success($data, 'User data fetched successfully', 200);
+    }
+
 }
