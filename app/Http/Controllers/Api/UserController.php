@@ -275,7 +275,7 @@ class UserController extends Controller
                     'description'               => $request->description,
                     'aphra_certificate'         => $certificatePath,
                     'location'                  => $request->location,
-                    'status'                    => 'active',
+                    'status'                    => 'inactive',
                 ]);
             }
 
