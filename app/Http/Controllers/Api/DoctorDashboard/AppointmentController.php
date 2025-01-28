@@ -118,7 +118,7 @@ class AppointmentController extends Controller
         }
 
         $query = Appointment::with(['user:id,avatar,gender'])
-            ->where('status', 'pending')
+            ->where('status', 'accept')
             ->whereNotNull('meting_link')
             ->whereDate('appointment_date', '=', $currentDate);
 
