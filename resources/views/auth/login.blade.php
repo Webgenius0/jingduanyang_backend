@@ -11,7 +11,7 @@
     @include('backend.partials.style')
 </head>
 
-<body id="kt_body" class="auth-bg" style="background: #3B82F6">
+<body id="kt_body" class="auth-bg" style="background: #20c997">
     <div class="d-flex flex-column flex-root">
         <div class="d-flex flex-column flex-lg-row flex-column-fluid">
             <div class="d-flex flex-column flex-lg-row-fluid py-10">

@@ -34,7 +34,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-color: #3b82f6;
+            background-color: #20c997;
             text-align: center;
         }
 
@@ -86,7 +86,7 @@
         }
 
         .bg-blue-500 {
-            background-color: #3b82f6;
+            background-color: #20c997;
         }
 
         .login-btn,
