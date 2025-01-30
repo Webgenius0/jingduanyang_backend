@@ -14,7 +14,7 @@ class SystemSettingController extends Controller
 
     public function SystemSetting() {
 
-        $data = SystemSetting::all();
+        $data = SystemSetting::first();
 
         if (!$data) {
             return $this->success([], 'Data Not Found', 200);
