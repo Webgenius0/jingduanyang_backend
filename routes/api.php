@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\Web\ServiceController;
 use App\Http\Controllers\Api\Web\HomePageController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\PayPal\PaymentController;
+use App\Http\Controllers\Api\Web\NewsLetterController;
 use App\Http\Controllers\Api\Web\DynamicPageController;
 use App\Http\Controllers\Api\Web\SystemSettingController;
 use App\Http\Controllers\Api\ClientDashboard\OrderController;
@@ -180,6 +181,11 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     });
 
+});
+
+//newsletter route
+Route::controller(NewsLetterController::class)->group(function () {
+    Route::post('/newsletter', 'newsletter');
 });
 
 //System Setting route
